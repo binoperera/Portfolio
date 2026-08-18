@@ -2,6 +2,7 @@ import { getData } from "@/lib/store";
 import type { Qualification } from "@/lib/types";
 import FilmFrame from "@/components/FilmFrame";
 import Reveal from "@/components/Reveal";
+import ProjectDetails from "@/components/ProjectDetails";
 
 // Always read fresh data — without this, Next.js may statically cache this
 // page at build time and your admin edits wouldn't show up once deployed.
@@ -196,7 +197,7 @@ const sortedQualifications = [...qualifications].sort((a, b) => {
 
       {/* ---------------- PROJECTS ---------------- */}
       <section id="work" className="max-w-5xl mx-auto px-6 py-16 border-t border-line scroll-mt-8">
-        <p className="eyebrow text-cream/50 mb-10">Developed — selected projects</p>
+        <p className="eyebrow text-cream/50 mb-10">Developed Projects</p>
         <div className="grid md:grid-cols-2 gap-6">
           {sortedProjects.map((p, i) => (
             <Reveal key={p.id} delay={i * 100}>
@@ -207,10 +208,7 @@ const sortedQualifications = [...qualifications].sort((a, b) => {
                     <span className="eyebrow text-safelight shrink-0 pt-1">Featured</span>
                   )}
                 </div>
-                <p className="text-cream/80 mt-2 leading-relaxed">{p.summary}</p>
-                {p.description && (
-                  <p className="text-cream/60 text-sm mt-3 leading-relaxed">{p.description}</p>
-                )}
+                <ProjectDetails summary={p.summary} description={p.description} />
                 {p.techStack?.length > 0 && (
                   <ul className="flex flex-wrap gap-2 mt-4">
                     {p.techStack.map((t) => (
@@ -275,8 +273,8 @@ const sortedQualifications = [...qualifications].sort((a, b) => {
                 Instagram
               </a>
             )}
-            {profile.socials.behance && (
-              <a href={profile.socials.behance} target="_blank" rel="noopener noreferrer" className="text-cream/80 hover:text-safelight transition">
+            {profile.socials.facebook && (
+              <a href={profile.socials.facebook} target="_blank" rel="noopener noreferrer" className="text-cream/80 hover:text-safelight transition">
                 Facebook
               </a>
             )}
