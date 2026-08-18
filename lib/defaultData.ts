@@ -16,7 +16,7 @@ export const defaultData: PortfolioData = {
       github: "https://github.com/yourusername",
       linkedin: "https://linkedin.com/in/yourusername",
       instagram: "https://instagram.com/yourusername",
-      behance: "https://behance.net/yourusername",
+      facebook: "https://facebook.com/yourusername",
     },
   },
   qualifications: [
