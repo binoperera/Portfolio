@@ -64,7 +64,9 @@ export async function DELETE() {
       await del(current.url);
     } else if (!hasBlob) {
       const localPath = path.join(process.cwd(), "public", current.url.replace(/^\//, ""));
-      fs.rm(localPath, () => {});
+      fs.rm(localPath, { force: true }, (err) => {
+  if (err) console.error("Failed to delete local resume file:", err);
+});
     }
   }
 
