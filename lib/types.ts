@@ -52,7 +52,7 @@ export interface Profile {
     github?: string;
     linkedin?: string;
     instagram?: string;
-    behance?: string;
+    facebook?: string;
   };
 }
 
