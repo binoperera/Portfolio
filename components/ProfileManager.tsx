@@ -151,7 +151,7 @@ export default function ProfileManager() {
       </p>
 
       <p className="text-xs text-cream/60 mb-2 mt-4">Social links (optional)</p>
-      {(["GitHub", "Linkedin", "Instagram", "Facebook"] as const).map((key) => (
+      {(["github", "linkedin", "instagram", "facebook"] as const).map((key) => (
         <input
           key={key}
           value={form.socials[key] || ""}
