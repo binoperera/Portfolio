@@ -164,7 +164,7 @@ const sortedQualifications = [...qualifications].sort((a, b) => {
       {/* ---------------- EXTRA-CURRICULAR / CONTACT SHEET ---------------- */}
       <section className="border-t border-line bg-paper text-paper-ink">
         <div className="max-w-5xl mx-auto px-6 py-16">
-          <p className="eyebrow text-paper-ink/50 mb-10">Contact sheet — beyond the day job</p>
+          <p className="eyebrow text-paper-ink/50 mb-10">Beyond the day Job</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {sortedActivities.map((a, i) => (
               <Reveal key={a.id} delay={i * 80}>
