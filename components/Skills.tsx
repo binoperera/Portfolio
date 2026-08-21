@@ -52,7 +52,7 @@ export default function Skills({ skills }: { skills: Skill[] }) {
     <section className="max-w-5xl mx-auto px-6 py-16 border-t border-line">
       <div className="flex items-baseline justify-between mb-10">
         <p className="eyebrow text-cream/50">Skills</p>
-        <p className="font-mono text-xs text-cream/30">{sorted.length} rolls loaded</p>
+        <p className="font-mono text-xs text-cream/30">{sorted.length}< /p>
       </div>
 
       <div className="grid sm:grid-cols-2 gap-5">
