@@ -69,9 +69,6 @@ export default function Skills({ skills }: { skills: Skill[] }) {
                     {s.category}
                   </h3>
                 </div>
-                <span className="font-mono text-[11px] text-cream/30 tracking-wide">
-                  ISO {String(s.items.length).padStart(2, "0")}
-                </span>
               </div>
 
               <ul className="flex flex-wrap gap-2">
