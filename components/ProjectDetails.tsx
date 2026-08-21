@@ -84,18 +84,17 @@ export default function ProjectDetails({
         <div className="flex flex-wrap gap-4 mt-3">
           {liveUrl && (
             
-              href={liveUrl}
+              <a href={liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-mono text-safelight hover:underline"
-            >
+              className="inline-flex items-center gap-1.5 text-xs font-mono text-safelight hover:underline">
               <ExternalLinkIcon className="w-3.5 h-3.5" />
               Live Demo
             </a>
           )}
           {githubUrl && (
             
-              href={githubUrl}
+              <a href={githubUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-xs font-mono text-safelight hover:underline"
