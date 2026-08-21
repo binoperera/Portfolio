@@ -8,11 +8,13 @@ import QualificationsManager from "@/components/QualificationsManager";
 import ActivitiesManager from "@/components/ActivitiesManager";
 import ProjectsManager from "@/components/ProjectsManager";
 import ResumeManager from "@/components/ResumeManager";
+import SkillsManager from "@/components/SkillsManager";
 
 const TABS = [
   { key: "profile", label: "Profile" },
   { key: "qualifications", label: "Qualifications" },
   { key: "activities", label: "Activities" },
+  { key: "skills", label: "Skills" },
   { key: "projects", label: "Projects" },
   { key: "resume", label: "Résumé" },
 ] as const;
@@ -72,6 +74,7 @@ export default function DashboardPage() {
         {tab === "activities" && <ActivitiesManager />}
         {tab === "projects" && <ProjectsManager />}
         {tab === "resume" && <ResumeManager />}
+        {tab === "skills" && <SkillsManager />}
       </div>
     </main>
   );
