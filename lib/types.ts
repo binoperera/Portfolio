@@ -65,7 +65,7 @@ export interface PortfolioData {
   activities: Activity[];
   projects: Project[];
   resume: ResumeMeta | null;
-  skills: Skills    
+  skills: Skills[];    
 }
 
 export interface Skill {
