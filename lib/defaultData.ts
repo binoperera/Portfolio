@@ -5,7 +5,7 @@ import { PortfolioData } from "./types";
 // as a starting point, so it doubles as a template.
 export const defaultData: PortfolioData = {
   profile: {
-    name: "Alex Perera",
+    name: "Nimsara Perera",
     role: "Software Engineer & Visual Creator",
     tagline: "I build software by day, and frame the world by aperture and layer by night.",
     bio: "I'm a software engineer who splits attention between shipping products and chasing light with a camera. This site is a contact sheet of both sides: the code I've written and the frames I've shot, developed side by side.",
@@ -19,6 +19,9 @@ export const defaultData: PortfolioData = {
       facebook: "https://facebook.com/yourusername",
     },
   },
+
+    skills: [],
+    
   qualifications: [
     {
       id: "q1",
