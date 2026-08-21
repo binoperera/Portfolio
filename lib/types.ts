@@ -65,4 +65,12 @@ export interface PortfolioData {
   activities: Activity[];
   projects: Project[];
   resume: ResumeMeta | null;
+  skills: Skills    
+}
+
+export interface Skill {
+  id: string;
+  category: string; // e.g. "Languages", "Frameworks", "Databases", "Tools", "Testing"
+  items: string[];  // e.g. ["JavaScript", "TypeScript", "PHP"]
+  order: number;
 }
