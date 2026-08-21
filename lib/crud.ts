@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getData, updateData } from "./store";
 import { PortfolioData } from "./types";
 
-type CollectionKey = "qualifications" | "activities" | "projects";
+type CollectionKey = "qualifications" | "activities" | "projects" | "skills";
 
 function generateId() {
   return crypto.randomUUID().slice(0, 8);
