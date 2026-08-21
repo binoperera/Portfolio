@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getSkillIcon, SKILL_CATEGORY_KEYS } from "@/lib/skillIcons";
 import type { Skill } from "@/lib/types";
 
 type FormState = Omit<Skill, "id" | "order" | "items"> & {
@@ -113,13 +114,21 @@ export default function SkillsManager() {
         {error && <p className="text-safelight text-sm mb-3">{error}</p>}
 
         <label className="block text-xs text-cream/60 mb-1">Category</label>
-        <input
-          required
-          value={form.category}
-          onChange={(e) => setForm({ ...form, category: e.target.value })}
-          placeholder="Languages, Frameworks, Databases, Tools, Testing..."
-          className="w-full bg-ink border border-line text-cream px-3 py-2 mb-3 outline-none focus:border-safelight"
-        />
+<div className="flex items-center gap-3 mb-1">
+  <div className="shrink-0 w-9 h-9 flex items-center justify-center border border-line text-aperture bg-ink">
+    {getSkillIcon(form.category || "default")}
+  </div>
+  <input
+    required
+    value={form.category}
+    onChange={(e) => setForm({ ...form, category: e.target.value })}
+    placeholder="Languages, Frameworks, Databases, Tools, Testing..."
+    className="flex-1 bg-ink border border-line text-cream px-3 py-2 outline-none focus:border-safelight"
+  />
+</div>
+<p className="text-cream/30 text-[11px] mb-3">
+  Recognized names get a matching icon: {SKILL_CATEGORY_KEYS.join(", ")}. Anything else uses a default icon.
+</p>
 
         <label className="block text-xs text-cream/60 mb-1">Skills (comma-separated)</label>
         <textarea
