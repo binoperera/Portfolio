@@ -37,6 +37,11 @@ async function readKv(): Promise<PortfolioData> {
     await redis.set(KV_KEY, defaultData);
     return defaultData;
   }
+  // Self-heal: older data saved before "skills" existed won't have this key.
+  if (!data.skills) {
+    data.skills = [];
+    await redis.set(KV_KEY, data);
+  }
   return data;
 }
 
