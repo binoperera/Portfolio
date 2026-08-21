@@ -31,6 +31,9 @@ export interface Project {
   imageUrl?: string;
   featured: boolean;
   order: number;
+  impact?: string[];        // e.g. ["Reduced load time by 40%", "Handled 500+ concurrent test cases"]
+  architectureImage?: string; // URL to a diagram image
+  challenges?: string; 
 }
 
 export interface ResumeMeta {
