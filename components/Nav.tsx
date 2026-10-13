@@ -18,15 +18,12 @@ export default function Nav({ name }: { name: string }) {
           {name}
         </a>
         <ul className="flex items-center gap-6 min-w-0 overflow-x-auto sm:ml-auto">
-          {links.map((l, i) => (
+          {links.map((l) => (
             <li key={l.href}>
               <a
                 href={l.href}
-                className="eyebrow group flex items-baseline gap-1.5 text-cream/60 hover:text-cream transition whitespace-nowrap"
+                className="eyebrow text-cream/60 hover:text-cream transition whitespace-nowrap"
               >
-                <span className="text-safelight/70 group-hover:text-safelight transition">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
                 {l.label}
               </a>
             </li>
