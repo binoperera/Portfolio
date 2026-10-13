@@ -23,11 +23,16 @@ export default function Reveal({
     const el = ref.current;
     if (!el) return;
 
+    // Very old browsers without IntersectionObserver: just show everything.
+    if (typeof IntersectionObserver === "undefined") {
+      setVisible(true);
+      return;
+    }
+
     // Reveal immediately if already on-screen at mount (e.g. mid-scroll load
     // or a back/forward navigation that restored scroll position).
     const rect = el.getBoundingClientRect();
-    const alreadyInView =
-      rect.top < window.innerHeight * 0.9 && rect.bottom > 0;
+    const alreadyInView = rect.top < window.innerHeight && rect.bottom > 0;
     if (alreadyInView) setVisible(true);
 
     const observer = new IntersectionObserver(
@@ -35,10 +40,12 @@ export default function Reveal({
         setVisible(entry.isIntersecting);
       },
       {
-        threshold: 0.15,
-        // Slightly generous margins so it doesn't flicker right at the
-        // viewport edge, but still clearly replays on scroll-up.
-        rootMargin: "0px 0px -5% 0px",
+        // threshold 0 + a positive bottom margin: content starts developing
+        // just BEFORE it scrolls into view, and only hides once it's fully
+        // off-screen. So visitors never see a blank gap where a section
+        // should be — even on fast scrolls or tall sections.
+        threshold: 0,
+        rootMargin: "0px 0px 15% 0px",
       }
     );
     observer.observe(el);
