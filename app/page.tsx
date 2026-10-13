@@ -98,7 +98,7 @@ export default async function HomePage() {
       <main id="main-content">
         {/* ---------------- HERO ---------------- */}
         <section id="top" className="relative overflow-hidden">
-            <Sprocket holeColor="rgb(var(--c-ink))" />
+          <Sprocket holeColor="rgb(var(--c-ink))" />
           <div className="max-w-5xl mx-auto px-6 pt-16 pb-20 md:pt-24 md:pb-28 grid md:grid-cols-[1fr_240px] gap-10 md:gap-14 items-start">
             <div>
               <p className="eyebrow text-safelight mb-6">
@@ -146,7 +146,7 @@ export default async function HomePage() {
               <FilmFrame photoUrl={profile.photoUrl} name={profile.name} />
             </Reveal>
           </div>
-             <Sprocket holeColor="rgb(var(--c-ink))" />
+          <Sprocket holeColor="rgb(var(--c-ink))" />
         </section>
 
         {/* ---------------- ABOUT ---------------- */}
@@ -164,6 +164,17 @@ export default async function HomePage() {
             {sortedProjects.map((p, i) => (
               <Reveal key={p.id} delay={i * 100}>
                 <div className="border border-line p-6 flex flex-col bg-surface h-full">
+                  {p.imageUrl && (
+                    <div className="-mx-6 -mt-6 mb-5 aspect-video overflow-hidden border-b border-line bg-ink">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={p.imageUrl}
+                        alt={`${p.title} screenshot`}
+                        loading="lazy"
+                        className="w-full h-full object-cover object-top"
+                      />
+                    </div>
+                  )}
                   <div className="flex items-start justify-between gap-3">
                     <h3 className="font-display font-medium text-2xl text-cream">{p.title}</h3>
                     {p.featured && (
@@ -274,7 +285,7 @@ export default async function HomePage() {
 
       {/* ---------------- CONTACT / FOOTER ---------------- */}
       <footer id="contact" className="border-t border-line scroll-mt-20">
-          <Sprocket holeColor="rgb(var(--c-ink))" />
+        <Sprocket holeColor="rgb(var(--c-ink))" />
         <div className="max-w-5xl mx-auto px-6 py-16">
           <p className="eyebrow text-cream/50 mb-4">Contact</p>
           <Reveal>
