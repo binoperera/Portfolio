@@ -186,6 +186,7 @@ export default async function HomePage() {
                     description={p.description}
                     impact={p.impact}
                     challenges={p.challenges}
+                    learnings={p.learnings}
                     architectureImage={p.architectureImage}
                   />
                   {p.techStack?.length > 0 && (
