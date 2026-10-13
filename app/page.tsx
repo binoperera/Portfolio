@@ -98,7 +98,7 @@ export default async function HomePage() {
       <main id="main-content">
         {/* ---------------- HERO ---------------- */}
         <section id="top" className="relative overflow-hidden">
-          <Sprocket holeColor="#141310" />
+            <Sprocket holeColor="rgb(var(--c-ink))" />
           <div className="max-w-5xl mx-auto px-6 pt-16 pb-20 md:pt-24 md:pb-28 grid md:grid-cols-[1fr_240px] gap-10 md:gap-14 items-start">
             <div>
               <p className="eyebrow text-safelight mb-6">
@@ -121,7 +121,7 @@ export default async function HomePage() {
                   <a
                     href={resume.url}
                     download={resume.fileName}
-                    className="inline-flex items-center gap-2 bg-safelight text-cream px-5 py-3 font-medium hover:brightness-110 transition"
+                    className="inline-flex items-center gap-2 bg-safelight text-white px-5 py-3 font-medium hover:brightness-110 transition"
                   >
                     Resume
                     <span aria-hidden>↓</span>
@@ -146,7 +146,7 @@ export default async function HomePage() {
               <FilmFrame photoUrl={profile.photoUrl} name={profile.name} />
             </Reveal>
           </div>
-          <Sprocket holeColor="#141310" />
+             <Sprocket holeColor="rgb(var(--c-ink))" />
         </section>
 
         {/* ---------------- ABOUT ---------------- */}
