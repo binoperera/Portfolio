@@ -7,14 +7,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        ink: "#141310",       // near-black warm background
-        surface: "#1D1B17",   // raised panels on dark
-        paper: "#F1ECE0",     // light-table paper for contact-sheet cards
-        "paper-ink": "#1B1812", // text on paper
-        cream: "#EDE8DC",     // body text on dark
-        safelight: "#E13A2E", // darkroom safelight red accent
-        aperture: "#4C9A6A",  // focus-confirm green accent
-        line: "#3A362E",      // hairline rules on dark
+        // Theme-aware colours — values live in app/globals.css (--c-*)
+        ink:       "rgb(var(--c-ink) / <alpha-value>)",
+        surface:   "rgb(var(--c-surface) / <alpha-value>)",
+        line:      "rgb(var(--c-line) / <alpha-value>)",
+        cream:     "rgb(var(--c-cream) / <alpha-value>)",
+        safelight: "rgb(var(--c-safelight) / <alpha-value>)",
+        aperture:  "rgb(var(--c-aperture) / <alpha-value>)",
         "line-paper": "#D8D0BE",
       },
       fontFamily: {
