@@ -33,7 +33,8 @@ export interface Project {
   order: number;
   impact?: string[];        // e.g. ["Reduced load time by 40%", "Handled 500+ concurrent test cases"]
   architectureImage?: string; // URL to a diagram image
-  challenges?: string; 
+  challenges?: string;      // what was hard and how it was solved
+  learnings?: string;       // what I learned
 }
 
 export interface ResumeMeta {
@@ -65,7 +66,7 @@ export interface PortfolioData {
   activities: Activity[];
   projects: Project[];
   resume: ResumeMeta | null;
-  skills: Skill[];    
+  skills: Skill[];
 }
 
 export interface Skill {
