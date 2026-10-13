@@ -39,6 +39,7 @@ export default function ProjectDetails({
   architectureImage,
   impact,
   challenges,
+  learnings,
 }: {
   summary: string;
   description?: string;
@@ -48,11 +49,12 @@ export default function ProjectDetails({
   architectureImage?: string;
   impact?: string[];
   challenges?: string;
+  learnings?: string;
 }) {
   const [expanded, setExpanded] = useState(false);
 
   const hasExtras =
-    (impact && impact.length > 0) || architectureImage || challenges;
+    (impact && impact.length > 0) || architectureImage || challenges || learnings;
 
   return (
     <>
@@ -160,10 +162,21 @@ export default function ProjectDetails({
               {challenges && (
                 <div className="mt-4">
                   <p className="font-mono text-xs text-cream/50 mb-1.5 uppercase tracking-wide">
-                    Challenges &amp; What I Learned
+                    Challenges
                   </p>
-                  <p className="text-cream/70 text-sm leading-relaxed italic">
+                  <p className="text-cream/70 text-sm leading-relaxed">
                     {challenges}
+                  </p>
+                </div>
+              )}
+
+              {learnings && (
+                <div className="mt-4">
+                  <p className="font-mono text-xs text-cream/50 mb-1.5 uppercase tracking-wide">
+                    What I Learned
+                  </p>
+                  <p className="text-cream/70 text-sm leading-relaxed">
+                    {learnings}
                   </p>
                 </div>
               )}
