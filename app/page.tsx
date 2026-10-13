@@ -87,7 +87,9 @@ export default async function HomePage() {
 
   const experience = qualifications.filter((q) => q.type === "experience").sort(byRecency);
   const education = qualifications.filter((q) => q.type === "education").sort(byRecency);
-  const certifications = qualifications.filter((q) => q.type === "certification").sort(byRecency);
+  const certifications = qualifications
+  .filter((q) => q.type === "certification")
+  .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || byRecency(a, b));
   const sortedActivities = [...activities].sort((a, b) => a.order - b.order);
   const sortedProjects = [...projects].sort((a, b) => a.order - b.order);
 
