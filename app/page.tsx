@@ -93,7 +93,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <Nav name={profile.name} resumeUrl={resume?.url} />
+      <Nav name={profile.name} />
 
       <main id="main-content">
         {/* ---------------- HERO ---------------- */}
