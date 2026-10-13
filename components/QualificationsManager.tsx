@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Qualification } from "@/lib/types";
 
-const emptyForm: Omit<Qualification, "id" | "order"> = {
+const emptyForm: Omit<Qualification, "id"> = {
   type: "education",
   title: "",
   organization: "",
@@ -11,6 +11,7 @@ const emptyForm: Omit<Qualification, "id" | "order"> = {
   startDate: "",
   endDate: "",
   description: "",
+  order: 0,
 };
 
 export default function QualificationsManager() {
@@ -41,6 +42,7 @@ export default function QualificationsManager() {
       startDate: item.startDate,
       endDate: item.endDate || "",
       description: item.description || "",
+      order: item.order ?? 0,
     });
   }
 
@@ -90,7 +92,7 @@ export default function QualificationsManager() {
   }
 
   // ==========================
-  // Sort order
+  // Sort order (mirrors the live site)
   // ==========================
   const typeOrder: Record<Qualification["type"], number> = {
     education: 0,
@@ -98,22 +100,25 @@ export default function QualificationsManager() {
     certification: 2,
   };
 
+  function byRecency(a: Qualification, b: Qualification) {
+    // Present (no endDate) counts as the latest possible date
+    const endA = a.endDate || "9999-12";
+    const endB = b.endDate || "9999-12";
+    if (endA !== endB) return endB.localeCompare(endA); // latest end date first
+    // Tiebreaker when end dates match: latest start date first
+    return b.startDate.localeCompare(a.startDate);
+  }
+
   const sortedItems = [...items].sort((a, b) => {
     // Education -> Experience -> Certification
     if (typeOrder[a.type] !== typeOrder[b.type]) {
       return typeOrder[a.type] - typeOrder[b.type];
     }
-
-    // Present (no endDate) counts as the latest possible date
-    const endA = a.endDate || "9999-12";
-    const endB = b.endDate || "9999-12";
-
-    if (endA !== endB) {
-      return endB.localeCompare(endA); // latest end date first
+    // Certifications: your chosen order first, then newest first
+    if (a.type === "certification") {
+      return (a.order ?? 0) - (b.order ?? 0) || byRecency(a, b);
     }
-
-    // Tiebreaker when end dates match: latest start date first
-    return b.startDate.localeCompare(a.startDate);
+    return byRecency(a, b);
   });
 
   return (
@@ -138,6 +143,9 @@ export default function QualificationsManager() {
                   <div>
                     <span className="text-xs uppercase tracking-wider text-cream/60">
                       {item.type}
+                      {item.type === "certification" && (
+                        <span className="ml-2 text-safelight">#{item.order ?? 0}</span>
+                      )}
                     </span>
 
                     <h3 className="text-lg font-semibold text-cream mt-1">
@@ -286,6 +294,24 @@ export default function QualificationsManager() {
           </div>
         </div>
 
+        {form.type === "certification" && (
+          <>
+            <label className="block text-xs text-cream/60 mb-1">
+              Display order (1 = shown first)
+            </label>
+
+            <input
+              type="number"
+              min={0}
+              value={form.order}
+              onChange={(e) =>
+                setForm({ ...form, order: Number(e.target.value) || 0 })
+              }
+              className="w-full bg-ink border border-line text-cream px-3 py-2 mb-3 outline-none focus:border-safelight"
+            />
+          </>
+        )}
+
         <label className="block text-xs text-cream/60 mb-1">
           Description (optional)
         </label>
@@ -302,7 +328,7 @@ export default function QualificationsManager() {
         <div className="flex gap-3">
           <button
             type="submit"
-            className="flex-1 bg-safelight text-cream py-2.5 font-medium hover:brightness-110 transition"
+            className="flex-1 bg-safelight text-white py-2.5 font-medium hover:brightness-110 transition"
           >
             {editingId ? "Save changes" : "Add entry"}
           </button>
