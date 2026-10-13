@@ -2,6 +2,13 @@ import type { Skill } from "@/lib/types";
 import Reveal from "@/components/Reveal";
 import { getSkillIcon } from "@/lib/skillIcons";
 
+const DATABASE_ICON = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
+    <ellipse cx="12" cy="6" rx="8" ry="3" />
+    <path d="M4 6v6c0 1.66 3.58 3 8 3s8-1.34 8-3V6M4 12v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
+  </svg>
+);
+
 const CATEGORY_ICONS: Record<string, JSX.Element> = {
   languages: (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
@@ -14,12 +21,10 @@ const CATEGORY_ICONS: Record<string, JSX.Element> = {
       <path d="M4 10h16M10 4v16" />
     </svg>
   ),
-  databases: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
-      <ellipse cx="12" cy="6" rx="8" ry="3" />
-      <path d="M4 6v6c0 1.66 3.58 3 8 3s8-1.34 8-3V6M4 12v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
-    </svg>
-  ),
+  // Both spellings — the admin category is "Database", which previously
+  // didn't match "databases" and fell back to the default icon.
+  database: DATABASE_ICON,
+  databases: DATABASE_ICON,
   tools: (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
       <path d="M14.7 6.3a5 5 0 0 0-6.4 6.4l-5 5v2h2l5-5a5 5 0 0 0 6.4-6.4l-2.8 2.8-2-2z" strokeLinecap="round" strokeLinejoin="round" />
@@ -50,10 +55,7 @@ export default function Skills({ skills }: { skills: Skill[] }) {
 
   return (
     <section className="max-w-5xl mx-auto px-6 py-16 border-t border-line">
-      <div className="flex items-baseline justify-between mb-10">
-        <p className="eyebrow text-cream/50">Skills</p>
-        <p className="font-mono text-xs text-cream/30">{sorted.length} </p>
-      </div>
+      <h2 className="eyebrow text-cream/50 mb-10">Skills</h2>
 
       <div className="grid sm:grid-cols-2 gap-5">
         {sorted.map((s, i) => (
