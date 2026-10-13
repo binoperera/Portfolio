@@ -22,6 +22,7 @@ const emptyForm: FormState = {
   impactInput: "",
   architectureImage: "",
   challenges: "",
+  learnings: "",
 };
 
 const inputClass =
@@ -60,6 +61,7 @@ export default function ProjectsManager() {
       impactInput: (item.impact || []).join("\n"),
       architectureImage: item.architectureImage || "",
       challenges: item.challenges || "",
+      learnings: item.learnings || "",
     });
   }
 
@@ -116,6 +118,7 @@ export default function ProjectsManager() {
         .filter(Boolean),
       architectureImage: form.architectureImage,
       challenges: form.challenges,
+      learnings: form.learnings,
     };
     const url = editingId ? `/api/projects/${editingId}` : "/api/projects";
     const method = editingId ? "PUT" : "POST";
@@ -294,11 +297,21 @@ export default function ProjectsManager() {
 
         {renderImageInput("architectureImage", "Architecture diagram (optional)", "Shown under “See more”.")}
 
-        <label className="block text-xs text-cream/60 mb-1">Challenges &amp; what I learned (optional)</label>
+        <label className="block text-xs text-cream/60 mb-1">Challenges (optional)</label>
         <textarea
           value={form.challenges}
           onChange={(e) => setForm({ ...form, challenges: e.target.value })}
           rows={3}
+          placeholder="What was hard, and how you solved it"
+          className={inputClass}
+        />
+
+        <label className="block text-xs text-cream/60 mb-1">What I learned (optional)</label>
+        <textarea
+          value={form.learnings}
+          onChange={(e) => setForm({ ...form, learnings: e.target.value })}
+          rows={3}
+          placeholder="Skills, tools or lessons you took away"
           className={inputClass}
         />
 
