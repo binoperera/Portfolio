@@ -2,6 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ------------------------------------------------------------------
+   THEME COLOURS
+   Stored as "R G B" channels so Tailwind opacity modifiers keep working
+   (text-cream/70, bg-ink/90 …). tailwind.config maps each Tailwind
+   colour name to one of these variables.
+
+   - data-theme="dark"  → dark
+   - data-theme="light" → light
+   - no data-theme      → follows the visitor's OS setting ("System")
+   ------------------------------------------------------------------ */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --c-ink: 34 32 28;        /* page background (lifted from #141310) */
+  --c-surface: 44 41 36;    /* cards */
+  --c-line: 72 67 58;       /* borders, dividers */
+  --c-cream: 237 232 220;   /* main text */
+  --c-safelight: 236 82 68; /* red accent */
+  --c-aperture: 96 176 126; /* green accent */
+  --c-film: 15 14 12;       /* film-strip base, stays dark in both themes */
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --c-ink: 244 240 231;
+  --c-surface: 251 248 242;
+  --c-line: 216 208 192;
+  --c-cream: 28 26 22;
+  --c-safelight: 196 44 34;
+  --c-aperture: 42 118 74;
+  --c-film: 28 26 22;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --c-ink: 244 240 231;
+    --c-surface: 251 248 242;
+    --c-line: 216 208 192;
+    --c-cream: 28 26 22;
+    --c-safelight: 196 44 34;
+    --c-aperture: 42 118 74;
+    --c-film: 28 26 22;
+  }
+}
+
 @layer base {
   * {
     @apply scroll-smooth;
@@ -13,38 +59,39 @@
   /* Subtle depth layer behind everything — soft safelight glow top-left,
    cool counter-glow top-right, so the background reads as considered
    rather than flat. Doesn't fight the film-grain overlay below. */
-body {
-  background-image:
-    radial-gradient(circle at 12% -5%, rgba(225, 58, 46, 0.07), transparent 42%),
-    radial-gradient(circle at 88% 10%, rgba(120, 140, 160, 0.05), transparent 48%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 20%);
-  background-attachment: fixed;
-}
+  body {
+    background-image:
+      radial-gradient(circle at 12% -5%, rgb(var(--c-safelight) / 0.07), transparent 42%),
+      radial-gradient(circle at 88% 10%, rgba(120, 140, 160, 0.05), transparent 48%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 20%);
+    background-attachment: fixed;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
 
   /* Selection color — small detail, but it's the one piece of styling every
      visitor triggers by accident the moment they highlight text to quote you. */
   ::selection {
-    background-color: #E13A2E;
-    color: #F1ECE0;
+    background-color: rgb(var(--c-safelight));
+    color: #fff;
   }
 
-  /* Themed scrollbar so the browser chrome doesn't clash with a dark site. */
+  /* Themed scrollbar so the browser chrome matches the active theme. */
   ::-webkit-scrollbar {
     width: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: #141310;
+    background: rgb(var(--c-ink));
   }
   ::-webkit-scrollbar-thumb {
-    background: #3A362E;
-    border: 2px solid #141310;
+    background: rgb(var(--c-line));
+    border: 2px solid rgb(var(--c-ink));
     border-radius: 999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #E13A2E;
+    background: rgb(var(--c-safelight));
   }
   html {
-    scrollbar-color: #3A362E #141310;
+    scrollbar-color: rgb(var(--c-line)) rgb(var(--c-ink));
   }
 }
 
@@ -52,7 +99,7 @@ body {
    the hero and between major sections. Each "hole" is a background circle. */
 .sprocket-strip {
   height: 10px;
-  background-image: radial-gradient(circle, var(--hole-color, #141310) 3.5px, transparent 3.6px);
+  background-image: radial-gradient(circle, var(--hole-color, rgb(var(--c-ink))) 3.5px, transparent 3.6px);
   background-size: 24px 10px;
   background-position: 6px center;
   background-repeat: repeat-x;
@@ -61,8 +108,8 @@ body {
 /* Same motif, rotated for the sides of a single film frame (e.g. the hero photo). */
 .sprocket-strip-vertical {
   width: 10px;
-  background-color: #0F0E0C;
-  background-image: radial-gradient(circle, #141310 3.5px, transparent 3.6px);
+  background-color: rgb(var(--c-film));
+  background-image: radial-gradient(circle, rgb(var(--c-ink)) 3.5px, transparent 3.6px);
   background-size: 10px 24px;
   background-position: center 6px;
   background-repeat: repeat-y;
@@ -109,12 +156,12 @@ body::after {
 /* Glow-on-hover for primary (safelight) buttons — a soft red bloom rather
    than a flat color-shift, like a safelight bulb warming up. Apply alongside
    your existing button classes, e.g.:
-   className="... bg-safelight text-cream ... btn-glow" */
+   className="... bg-safelight text-white ... btn-glow" */
 .btn-glow {
   transition: box-shadow 0.3s ease, transform 0.15s ease;
 }
 .btn-glow:hover {
-  box-shadow: 0 0 0 1px rgba(225, 58, 46, 0.4), 0 8px 24px -4px rgba(225, 58, 46, 0.45);
+  box-shadow: 0 0 0 1px rgb(var(--c-safelight) / 0.4), 0 8px 24px -4px rgb(var(--c-safelight) / 0.45);
   transform: translateY(-1px);
 }
 .btn-glow:active {
