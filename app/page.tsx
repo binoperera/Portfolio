@@ -170,7 +170,13 @@ export default async function HomePage() {
                       <span className="eyebrow text-safelight shrink-0 pt-1">Featured</span>
                     )}
                   </div>
-                  <ProjectDetails summary={p.summary} description={p.description} />
+                  <ProjectDetails
+                    summary={p.summary}
+                    description={p.description}
+                    impact={p.impact}
+                    challenges={p.challenges}
+                    architectureImage={p.architectureImage}
+                  />
                   {p.techStack?.length > 0 && (
                     <ul className="flex flex-wrap gap-2 mt-4">
                       {p.techStack.map((t) => (
