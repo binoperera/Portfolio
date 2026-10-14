@@ -296,7 +296,7 @@ export default async function HomePage() {
         )}
 
         {/* ---------------- BEYOND CODE (was the cream "contact sheet") ---------------- */}
-        <Section id="exposures" title={<>Beyond code </>}>
+        <Section id="exposures" title={<>Beyond code — photography, design &amp; community</>}>
           {/* Contact sheet: gallery photos from all activities. Muted grade like the
               hero photo; hovering "develops" each frame to full colour. */}
           {galleryImages.length > 0 && (
