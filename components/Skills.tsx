@@ -54,38 +54,43 @@ export default function Skills({ skills }: { skills: Skill[] }) {
   const sorted = [...skills].sort((a, b) => a.order - b.order);
 
   return (
-    <section className="max-w-5xl mx-auto px-6 py-16 border-t border-line">
-      <h2 className="eyebrow text-cream/50 mb-10">Skills</h2>
+    // Same width and label-rail layout as the sections in app/page.tsx.
+    <section className="max-w-7xl mx-auto px-6 lg:px-12 py-16 border-t border-line">
+      <div className="grid lg:grid-cols-[160px_minmax(0,1fr)] gap-x-12 gap-y-8">
+        <div>
+          <h2 className="eyebrow text-cream/50 lg:sticky lg:top-24">Skills</h2>
+        </div>
 
-      <div className="grid sm:grid-cols-2 gap-5">
-        {sorted.map((s, i) => (
-          <Reveal key={s.id} delay={i * 80}>
-            <div className="group relative border border-line bg-surface p-5 overflow-hidden hover:border-safelight/40 transition">
-              {/* top accent strip */}
-              <div className="absolute top-0 left-0 right-0 h-[3px] bg-safelight/70 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300" />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 min-w-0">
+          {sorted.map((s, i) => (
+            <Reveal key={s.id} delay={i * 80}>
+              <div className="group relative border border-line bg-surface p-5 overflow-hidden hover:border-safelight/40 transition h-full">
+                {/* top accent strip */}
+                <div className="absolute top-0 left-0 right-0 h-[3px] bg-safelight/70 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300" />
 
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2.5 text-aperture">
-                  {getIcon(s.category)}
-                  <h3 className="font-display font-medium text-lg text-cream">
-                    {s.category}
-                  </h3>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2.5 text-aperture">
+                    {getIcon(s.category)}
+                    <h3 className="font-display font-medium text-lg text-cream">
+                      {s.category}
+                    </h3>
+                  </div>
                 </div>
-              </div>
 
-              <ul className="flex flex-wrap gap-2">
-                {s.items.map((item) => (
-                  <li
-                    key={item}
-                    className="font-mono text-xs text-cream/80 border border-line px-3 py-1.5 hover:border-safelight/60 hover:text-safelight hover:bg-safelight/5 transition cursor-default"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-        ))}
+                <ul className="flex flex-wrap gap-2">
+                  {s.items.map((item) => (
+                    <li
+                      key={item}
+                      className="font-mono text-xs text-cream/80 border border-line px-3 py-1.5 hover:border-safelight/60 hover:text-safelight hover:bg-safelight/5 transition cursor-default"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );
