@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Project } from "@/lib/types";
 
-type FormState = Omit<Project, "id" | "order" | "techStack" | "impact"> & {
+type FormState = Omit<Project, "id" | "techStack" | "impact"> & {
   techStackInput: string;
   impactInput: string; // one result per line
 };
@@ -23,6 +23,7 @@ const emptyForm: FormState = {
   architectureImage: "",
   challenges: "",
   learnings: "",
+  order: 0, // 0 = put new projects at the end
 };
 
 const inputClass =
@@ -62,6 +63,7 @@ export default function ProjectsManager() {
       architectureImage: item.architectureImage || "",
       challenges: item.challenges || "",
       learnings: item.learnings || "",
+      order: item.order ?? 0,
     });
   }
 
@@ -119,6 +121,8 @@ export default function ProjectsManager() {
       architectureImage: form.architectureImage,
       challenges: form.challenges,
       learnings: form.learnings,
+      // Omitted when 0, so new projects go last and edits keep their position.
+      ...(form.order > 0 && { order: form.order }),
     };
     const url = editingId ? `/api/projects/${editingId}` : "/api/projects";
     const method = editingId ? "PUT" : "POST";
@@ -132,8 +136,33 @@ export default function ProjectsManager() {
       setError(body.error || "Something went wrong.");
       return;
     }
+    if (form.order > 0) {
+      const saved: Project = await res.json();
+      await renumber(saved.id, form.order);
+    }
     resetForm();
     load();
+  }
+
+  // Moves one project to `position` (1 = first) and renumbers the rest 1, 2, 3…
+  // so no two projects share a number. Only projects whose number changed are saved.
+  async function renumber(movedId: string, position: number) {
+    const fresh: Project[] = await (await fetch("/api/projects")).json();
+    const moved = fresh.find((p) => p.id === movedId);
+    if (!moved) return;
+    const rest = fresh.filter((p) => p.id !== movedId);
+    const index = Math.min(Math.max(position, 1), rest.length + 1) - 1;
+    rest.splice(index, 0, moved);
+    // One at a time: each save rewrites the whole data record, so parallel
+    // requests could overwrite each other.
+    for (const [i, p] of rest.entries()) {
+      if (p.order === i + 1) continue;
+      await fetch(`/api/projects/${p.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ order: i + 1 }),
+      });
+    }
   }
 
   async function handleDelete(id: string) {
@@ -202,6 +231,7 @@ export default function ProjectsManager() {
                   )}
                   <div className="min-w-0">
                     <p className="font-medium text-cream">
+                      <span className="text-safelight mr-2">#{item.order}</span>
                       {item.title} {item.featured && <span className="eyebrow text-safelight ml-2">Featured</span>}
                     </p>
                     <p className="text-cream/60 text-sm mt-1">{item.summary}</p>
@@ -312,6 +342,15 @@ export default function ProjectsManager() {
           onChange={(e) => setForm({ ...form, learnings: e.target.value })}
           rows={3}
           placeholder="Skills, tools or lessons you took away"
+          className={inputClass}
+        />
+
+        <label className="block text-xs text-cream/60 mb-1">Display order (1 = shown first)</label>
+        <input
+          type="number"
+          min={0}
+          value={form.order}
+          onChange={(e) => setForm({ ...form, order: Number(e.target.value) || 0 })}
           className={inputClass}
         />
 
