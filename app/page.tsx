@@ -337,7 +337,7 @@ export default async function HomePage() {
                     a.link ? "hover:border-cream/40 transition cursor-pointer" : ""
                   }`}
                 >
-                  {a.imageUrl && isVisualCategory(a.category) && (
+                  {a.imageUrl && (
                     <div className="-mx-5 -mt-5 mb-4 aspect-video overflow-hidden border-b border-line bg-ink">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
