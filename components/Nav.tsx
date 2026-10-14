@@ -12,7 +12,8 @@ const links = [
 export default function Nav({ name }: { name: string }) {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-ink/90 backdrop-blur">
-      <nav aria-label="Primary" className="max-w-5xl mx-auto px-6 h-14 flex items-center gap-6">
+      {/* Same width as the page sections (CONTAINER in app/page.tsx). */}
+      <nav aria-label="Primary" className="max-w-7xl mx-auto px-6 lg:px-12 h-14 flex items-center gap-6">
         <a
           href="#top"
           className="hidden sm:flex items-center gap-2 font-display font-bold text-cream tracking-tight shrink-0 hover:text-safelight transition"
