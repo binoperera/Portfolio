@@ -128,6 +128,14 @@ export default async function HomePage() {
   const sortedActivities = [...activities].sort((a, b) => a.order - b.order);
   const sortedProjects = [...projects].sort((a, b) => a.order - b.order);
 
+  // Photos from every activity's gallery, in activity order, for the contact sheet.
+  const GALLERY_LIMIT = 12;
+  const galleryImages = sortedActivities
+    .flatMap((a) =>
+      (a.images ?? []).map((src, idx) => ({ src, alt: `${a.title} — photo ${idx + 1}`, key: `${a.id}-${idx}` }))
+    )
+    .slice(0, GALLERY_LIMIT);
+
   return (
     <>
       <Nav name={profile.name} />
@@ -289,6 +297,33 @@ export default async function HomePage() {
 
         {/* ---------------- BEYOND CODE (was the cream "contact sheet") ---------------- */}
         <Section id="exposures" title={<>Beyond code </>}>
+          {/* Contact sheet: gallery photos from all activities. Muted grade like the
+              hero photo; hovering "develops" each frame to full colour. */}
+          {galleryImages.length > 0 && (
+            <ul className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 mb-10">
+              {galleryImages.map((img, i) => (
+                <li key={img.key}>
+                  <Reveal delay={(i % 4) * 80}>
+                    <a
+                      href={img.src}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group block aspect-[4/5] overflow-hidden border border-line bg-surface"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={img.src}
+                        alt={img.alt}
+                        loading="lazy"
+                        className="w-full h-full object-cover grayscale-[40%] sepia-[.2] brightness-[.85] transition duration-700 group-hover:grayscale-0 group-hover:sepia-0 group-hover:brightness-100 group-hover:scale-[1.03]"
+                      />
+                    </a>
+                  </Reveal>
+                </li>
+              ))}
+            </ul>
+          )}
+
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {sortedActivities.map((a, i) => (
               <Reveal key={a.id} delay={i * 80}>
@@ -300,6 +335,17 @@ export default async function HomePage() {
                     a.link ? "hover:border-cream/40 transition cursor-pointer" : ""
                   }`}
                 >
+                  {a.imageUrl && (
+                    <div className="-mx-5 -mt-5 mb-4 aspect-video overflow-hidden border-b border-line bg-ink">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={a.imageUrl}
+                        alt={`${a.title} cover`}
+                        loading="lazy"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
                   <p className="eyebrow text-safelight mb-3">{a.category}</p>
                   <h3 className="font-display font-medium text-xl text-cream">{a.title}</h3>
                   {a.description && (
