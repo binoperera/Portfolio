@@ -158,7 +158,7 @@ export default async function HomePage() {
                   <a
                     href={resume.url}
                     download={resume.fileName}
-                    className="inline-flex items-center gap-2 bg-safelight text-white px-5 py-3 font-medium hover:brightness-110 transition"
+                    className="inline-flex items-center gap-2 bg-safelight text-white px-5 py-3 font-medium hover:brightness-110 transition btn-glow"
                   >
                     Resume
                     <span aria-hidden>↓</span>
@@ -288,7 +288,7 @@ export default async function HomePage() {
         )}
 
         {/* ---------------- BEYOND CODE (was the cream "contact sheet") ---------------- */}
-        <Section id="exposures" title={<>Beyond code</>}>
+        <Section id="exposures" title={<>Beyond code — photography, design &amp; community</>}>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {sortedActivities.map((a, i) => (
               <Reveal key={a.id} delay={i * 80}>
@@ -328,26 +328,26 @@ export default async function HomePage() {
             </h2>
           </Reveal>
           <div className="flex flex-wrap gap-x-8 gap-y-3 font-mono text-sm">
-            <a href={`mailto:${profile.email}`} className="text-cream/80 hover:text-safelight transition">
+            <a href={`mailto:${profile.email}`} className="text-cream/80 hover:text-safelight transition link-underline">
               {profile.email}
             </a>
             {profile.socials.github && (
-              <a href={profile.socials.github} target="_blank" rel="noopener noreferrer" className="text-cream/80 hover:text-safelight transition">
+              <a href={profile.socials.github} target="_blank" rel="noopener noreferrer" className="text-cream/80 hover:text-safelight transition link-underline">
                 GitHub
               </a>
             )}
             {profile.socials.linkedin && (
-              <a href={profile.socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-cream/80 hover:text-safelight transition">
+              <a href={profile.socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-cream/80 hover:text-safelight transition link-underline">
                 LinkedIn
               </a>
             )}
             {profile.socials.instagram && (
-              <a href={profile.socials.instagram} target="_blank" rel="noopener noreferrer" className="text-cream/80 hover:text-safelight transition">
+              <a href={profile.socials.instagram} target="_blank" rel="noopener noreferrer" className="text-cream/80 hover:text-safelight transition link-underline">
                 Instagram
               </a>
             )}
             {profile.socials.facebook && (
-              <a href={profile.socials.facebook} target="_blank" rel="noopener noreferrer" className="text-cream/80 hover:text-safelight transition">
+              <a href={profile.socials.facebook} target="_blank" rel="noopener noreferrer" className="text-cream/80 hover:text-safelight transition link-underline">
                 Facebook
               </a>
             )}
