@@ -32,7 +32,7 @@ function writeLocal(data: PortfolioData) {
 // ---- Redis / Upstash (used in production on Vercel) --------------------------
 async function readKv(): Promise<PortfolioData> {
   const { Redis } = await import("@upstash/redis");
-  const redis = Redis.fromEnv();
+  const redis = Redis.fromEnv({ cache: "default" });
   const data = await redis.get<PortfolioData>(KV_KEY);
   if (!data) {
     await redis.set(KV_KEY, defaultData);
