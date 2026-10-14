@@ -177,7 +177,7 @@ body::after {
    your existing button classes, e.g.:
    className="... bg-safelight text-white ... btn-glow" */
 .btn-glow {
-  transition: box-shadow 0.3s ease, transform 0.15s ease;
+  transition: box-shadow 0.3s ease, transform 0.15s ease, filter 0.3s ease;
 }
 .btn-glow:hover {
   box-shadow: 0 0 0 1px rgb(var(--c-safelight) / 0.4), 0 8px 24px -4px rgb(var(--c-safelight) / 0.45);
