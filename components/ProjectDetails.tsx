@@ -198,7 +198,9 @@ export default function ProjectDetails({
             onClick={() => setExpanded((prev) => !prev)}
             aria-expanded={expanded}
             aria-controls={panelId}
-            className="font-mono text-xs text-safelight hover:underline mt-2"
+            // py-3 gives a 40px-tall tap area; the negative margins cancel it out
+            // so the text stays exactly where it was.
+            className="font-mono text-xs text-safelight hover:underline py-3 -mt-1 -mb-3"
           >
             {expanded ? "See less" : "See more"}
           </button>
