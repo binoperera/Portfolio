@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { getTechIconUrl } from "@/lib/techIcons";
 
 function ExternalLinkIcon({ className }: { className?: string }) {
@@ -52,6 +52,7 @@ export default function ProjectDetails({
   learnings?: string;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const panelId = useId();
 
   const hasExtras =
     (impact && impact.length > 0) || architectureImage || challenges || learnings;
@@ -119,7 +120,10 @@ export default function ProjectDetails({
               gridTemplateRows: expanded ? "1fr" : "0fr",
             }}
           >
-            <div className="overflow-hidden min-h-0">
+            {/* While collapsed this panel is 0px tall but still in the DOM, so hide it
+                from screen readers and search crawlers too — otherwise the description
+                is read twice (here and in the 2-line preview below). */}
+            <div id={panelId} aria-hidden={!expanded} className="overflow-hidden min-h-0">
               {description && (
                 <p className="text-cream/60 text-sm leading-relaxed">
                   {description}
@@ -193,6 +197,7 @@ export default function ProjectDetails({
             type="button"
             onClick={() => setExpanded((prev) => !prev)}
             aria-expanded={expanded}
+            aria-controls={panelId}
             className="font-mono text-xs text-safelight hover:underline mt-2"
           >
             {expanded ? "See less" : "See more"}
