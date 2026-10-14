@@ -142,9 +142,26 @@ export default async function HomePage() {
       (a.images ?? []).map((src, idx) => ({ src, alt: `${a.title} — photo ${idx + 1}`, key: `${a.id}-${idx}` }))
     )
     .slice(0, GALLERY_LIMIT);
+    // Structured data so search engines know this page is about a person.
+  const personJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: profile.name,
+    jobTitle: profile.role,
+    url: "https://nimsaraperera.vercel.app",
+    ...(profile.photoUrl && { image: profile.photoUrl }),
+    ...(profile.location && {
+      address: { "@type": "PostalAddress", addressLocality: profile.location },
+    }),
+    sameAs: [profile.socials.linkedin, profile.socials.github].filter(Boolean),
+  };
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd).replace(/</g, "\\u003c") }}
+      />
       <Nav name={profile.name} />
 
       <main id="main-content">
