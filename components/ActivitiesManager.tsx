@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Activity } from "@/lib/types";
+import { isVisualCategory } from "@/lib/activityCategories";
 
 // Vercel rejects request bodies over 4.5MB, so large camera photos are resized
 // in the browser before upload. 2000px on the long edge is plenty for the gallery
@@ -65,19 +66,10 @@ const emptyForm: Omit<Activity, "id" | "order"> = {
 const FILE_INPUT =
   "text-xs text-cream/70 file:mr-3 file:py-1.5 file:px-3 file:border file:border-line file:bg-ink file:text-cream file:text-xs hover:file:border-safelight file:cursor-pointer disabled:opacity-60";
 
-// Gallery URLs are edited as plain text (one per line) and only parsed on save,
-// so pressing Enter in the textarea isn't swallowed while typing.
-function parseImageList(text: string): string[] {
-  return text
-    .split(/\r?\n/)
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
-
 export default function ActivitiesManager() {
   const [items, setItems] = useState<Activity[]>([]);
   const [form, setForm] = useState(emptyForm);
-  const [imagesText, setImagesText] = useState("");
+  const [images, setImages] = useState<string[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -112,7 +104,7 @@ export default function ActivitiesManager() {
       setUploadStatus(`Uploading ${i + 1} of ${files.length}…`);
       try {
         const url = await uploadImage(files[i]);
-        setImagesText((t) => (t.trim() ? `${t.trimEnd()}\n${url}` : url));
+        setImages((list) => [...list, url]);
       } catch (err) {
         failures.push(err instanceof Error ? err.message : `${files[i].name}: upload failed.`);
       }
@@ -123,7 +115,7 @@ export default function ActivitiesManager() {
   }
 
   function removeGalleryImage(index: number) {
-    setImagesText(parseImageList(imagesText).filter((_, i) => i !== index).join("\n"));
+    setImages((list) => list.filter((_, i) => i !== index));
   }
 
   async function load() {
@@ -146,24 +138,32 @@ export default function ActivitiesManager() {
       imageUrl: item.imageUrl || "",
       link: item.link || "",
     });
-    setImagesText((item.images ?? []).join("\n"));
+    setImages(item.images ?? []);
   }
 
   function resetForm() {
     setEditingId(null);
     setForm(emptyForm);
-    setImagesText("");
+    setImages([]);
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    const visual = isVisualCategory(form.category);
+    if (visual && !form.imageUrl) {
+      setError("Upload a cover image — it's required for Photography and Graphic Design.");
+      return;
+    }
     const url = editingId ? `/api/activities/${editingId}` : "/api/activities";
     const method = editingId ? "PUT" : "POST";
     const res = await fetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...form, images: parseImageList(imagesText) }),
+      // Non-visual categories (e.g. Volunteering) never keep images.
+      body: JSON.stringify(
+        visual ? { ...form, images } : { ...form, imageUrl: "", images: [] }
+      ),
     });
     if (!res.ok) {
       const body = await res.json();
@@ -181,7 +181,7 @@ export default function ActivitiesManager() {
     load();
   }
 
-  const galleryPreview = parseImageList(imagesText);
+  const visual = isVisualCategory(form.category);
 
   return (
     <div className="grid lg:grid-cols-[1fr_380px] gap-8">
@@ -253,68 +253,64 @@ export default function ActivitiesManager() {
           className="w-full bg-ink border border-line text-cream px-3 py-2 mb-3 outline-none focus:border-safelight"
         />
 
-        <label className="block text-xs text-cream/60 mb-1">Cover image (optional)</label>
-        <div className="flex items-center gap-3 mb-2">
-          {form.imageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={form.imageUrl} alt="Cover preview" className="w-14 h-10 object-cover border border-line" />
-          ) : (
-            <div className="w-14 h-10 border border-dashed border-line" />
-          )}
-          <input
-            ref={coverInputRef}
-            type="file"
-            accept="image/png, image/jpeg, image/webp, image/gif"
-            onChange={handleCoverUpload}
-            disabled={uploading}
-            className={FILE_INPUT}
-          />
-        </div>
-        <input
-          value={form.imageUrl}
-          onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-          placeholder="…or paste a URL"
-          className="w-full bg-ink border border-line text-cream px-3 py-2 mb-3 outline-none focus:border-safelight"
-        />
+        {/* Images only for Photography / Graphic Design — upload only, no URLs. */}
+        {visual && (
+          <div className="border border-line p-3 mb-3">
+            <label className="block text-xs text-cream/60 mb-1">
+              Cover image <span className="text-safelight">*</span>
+            </label>
+            <div className="flex items-center gap-3 mb-3">
+              {form.imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={form.imageUrl} alt="Cover preview" className="w-14 h-10 object-cover border border-line" />
+              ) : (
+                <div className="w-14 h-10 border border-dashed border-line" />
+              )}
+              <input
+                ref={coverInputRef}
+                type="file"
+                accept="image/png, image/jpeg, image/webp, image/gif"
+                onChange={handleCoverUpload}
+                disabled={uploading}
+                aria-label="Upload cover image"
+                className={`${FILE_INPUT} min-w-0`}
+              />
+            </div>
 
-        <label className="block text-xs text-cream/60 mb-1">Gallery photos (optional)</label>
-        <input
-          ref={galleryInputRef}
-          type="file"
-          multiple
-          accept="image/png, image/jpeg, image/webp, image/gif"
-          onChange={handleGalleryUpload}
-          disabled={uploading}
-          className={`${FILE_INPUT} mb-2`}
-        />
-        {galleryPreview.length > 0 && (
-          <ul className="flex flex-wrap gap-2 mb-2">
-            {galleryPreview.map((src, i) => (
-              <li key={`${src}-${i}`} className="relative w-12 h-12 border border-line bg-ink overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt="" className="w-full h-full object-cover" />
-                <button
-                  type="button"
-                  onClick={() => removeGalleryImage(i)}
-                  aria-label={`Remove photo ${i + 1}`}
-                  className="absolute top-0 right-0 w-4 h-4 bg-ink/80 text-cream text-[10px] leading-none hover:bg-safelight"
-                >
-                  ×
-                </button>
-              </li>
-            ))}
-          </ul>
+            <label className="block text-xs text-cream/60 mb-1">Gallery photos (optional)</label>
+            <input
+              ref={galleryInputRef}
+              type="file"
+              multiple
+              accept="image/png, image/jpeg, image/webp, image/gif"
+              onChange={handleGalleryUpload}
+              disabled={uploading}
+              aria-label="Upload gallery photos"
+              className={`${FILE_INPUT} mb-2`}
+            />
+            {images.length > 0 && (
+              <ul className="flex flex-wrap gap-2 mb-2">
+                {images.map((src, i) => (
+                  <li key={`${src}-${i}`} className="relative w-12 h-12 border border-line bg-ink overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={src} alt="" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => removeGalleryImage(i)}
+                      aria-label={`Remove photo ${i + 1}`}
+                      className="absolute top-0 right-0 w-4 h-4 bg-ink/80 text-cream text-[10px] leading-none hover:bg-safelight"
+                    >
+                      ×
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <p className="text-xs text-cream/40">
+              JPG, PNG, WEBP or GIF. Large photos are resized to 2000px before upload.
+            </p>
+          </div>
         )}
-        <textarea
-          value={imagesText}
-          onChange={(e) => setImagesText(e.target.value)}
-          rows={3}
-          placeholder={"…or paste URLs, one per line"}
-          className="w-full bg-ink border border-line text-cream px-3 py-2 mb-1 outline-none focus:border-safelight font-mono text-xs"
-        />
-        <p className="text-xs text-cream/40 mb-3">
-          JPG, PNG, WEBP or GIF. Large photos are resized to 2000px before upload.
-        </p>
 
         <label className="block text-xs text-cream/60 mb-1">Link (optional)</label>
         <input
