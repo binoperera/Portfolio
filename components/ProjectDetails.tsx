@@ -125,7 +125,7 @@ export default function ProjectDetails({
                 is read twice (here and in the 2-line preview below). */}
             <div id={panelId} aria-hidden={!expanded} className="overflow-hidden min-h-0">
               {description && (
-                <p className="text-cream/60 text-sm leading-relaxed">
+                <p className="text-cream/70 text-sm leading-relaxed">
                   {description}
                 </p>
               )}
@@ -146,7 +146,7 @@ export default function ProjectDetails({
 
               {architectureImage && (
                 <div className="mt-4">
-                  <p className="font-mono text-xs text-cream/50 mb-2 uppercase tracking-wide">
+                  <p className="font-mono text-xs text-cream/65 mb-2 uppercase tracking-wide">
                     Architecture
                   </p>
                   <div className="overflow-hidden border border-cream/10">
@@ -165,7 +165,7 @@ export default function ProjectDetails({
 
               {challenges && (
                 <div className="mt-4">
-                  <p className="font-mono text-xs text-cream/50 mb-1.5 uppercase tracking-wide">
+                  <p className="font-mono text-xs text-cream/65 mb-1.5 uppercase tracking-wide">
                     Challenges
                   </p>
                   <p className="text-cream/70 text-sm leading-relaxed">
@@ -176,7 +176,7 @@ export default function ProjectDetails({
 
               {learnings && (
                 <div className="mt-4">
-                  <p className="font-mono text-xs text-cream/50 mb-1.5 uppercase tracking-wide">
+                  <p className="font-mono text-xs text-cream/65 mb-1.5 uppercase tracking-wide">
                     What I Learned
                   </p>
                   <p className="text-cream/70 text-sm leading-relaxed">
@@ -188,7 +188,7 @@ export default function ProjectDetails({
           </div>
 
           {!expanded && description && (
-            <p className="text-cream/60 text-sm leading-relaxed line-clamp-2">
+            <p className="text-cream/70 text-sm leading-relaxed line-clamp-2">
               {description}
             </p>
           )}
