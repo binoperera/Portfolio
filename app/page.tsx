@@ -6,6 +6,7 @@ import Reveal from "@/components/Reveal";
 import ProjectDetails from "@/components/ProjectDetails";
 import Skills from "@/components/Skills";
 import Nav from "@/components/Nav";
+import { isVisualCategory } from "@/lib/activityCategories";
 
 // Always read fresh data — without this, Next.js may statically cache this
 // page at build time and your admin edits wouldn't show up once deployed.
@@ -128,9 +129,10 @@ export default async function HomePage() {
   const sortedActivities = [...activities].sort((a, b) => a.order - b.order);
   const sortedProjects = [...projects].sort((a, b) => a.order - b.order);
 
-  // Photos from every activity's gallery, in activity order, for the contact sheet.
+  // Photos from Photography / Graphic Design galleries, in activity order, for the contact sheet.
   const GALLERY_LIMIT = 12;
   const galleryImages = sortedActivities
+    .filter((a) => isVisualCategory(a.category))
     .flatMap((a) =>
       (a.images ?? []).map((src, idx) => ({ src, alt: `${a.title} — photo ${idx + 1}`, key: `${a.id}-${idx}` }))
     )
@@ -296,7 +298,7 @@ export default async function HomePage() {
         )}
 
         {/* ---------------- BEYOND CODE (was the cream "contact sheet") ---------------- */}
-        <Section id="exposures" title={<>Beyond code — photography, design &amp; community</>}>
+        <Section id="exposures" title={<>Beyond code </>}>
           {/* Contact sheet: gallery photos from all activities. Muted grade like the
               hero photo; hovering "develops" each frame to full colour. */}
           {galleryImages.length > 0 && (
@@ -335,7 +337,7 @@ export default async function HomePage() {
                     a.link ? "hover:border-cream/40 transition cursor-pointer" : ""
                   }`}
                 >
-                  {a.imageUrl && (
+                  {a.imageUrl && isVisualCategory(a.category) && (
                     <div className="-mx-5 -mt-5 mb-4 aspect-video overflow-hidden border-b border-line bg-ink">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
