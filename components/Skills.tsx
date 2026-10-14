@@ -1,6 +1,5 @@
 import type { Skill } from "@/lib/types";
 import Reveal from "@/components/Reveal";
-import { getSkillIcon } from "@/lib/skillIcons";
 
 const DATABASE_ICON = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5">
