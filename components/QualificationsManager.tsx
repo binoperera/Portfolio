@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { byRecency, formatYearMonth, toYearMonth } from "@/lib/dates";
 import type { Qualification } from "@/lib/types";
 
 const emptyForm: Omit<Qualification, "id"> = {
@@ -39,8 +40,10 @@ export default function QualificationsManager() {
       title: item.title,
       organization: item.organization,
       location: item.location || "",
-      startDate: item.startDate,
-      endDate: item.endDate || "",
+      // Older entries were typed as text ("2025 November"); convert them so the
+      // month pickers show the right value and saving stores "YYYY-MM".
+      startDate: toYearMonth(item.startDate),
+      endDate: toYearMonth(item.endDate),
       description: item.description || "",
       order: item.order ?? 0,
     });
@@ -66,7 +69,12 @@ export default function QualificationsManager() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(form),
+      // Normalise in case the browser has no month picker and the date was typed.
+      body: JSON.stringify({
+        ...form,
+        startDate: toYearMonth(form.startDate),
+        endDate: toYearMonth(form.endDate),
+      }),
     });
 
     if (!res.ok) {
@@ -99,15 +107,6 @@ export default function QualificationsManager() {
     experience: 1,
     certification: 2,
   };
-
-  function byRecency(a: Qualification, b: Qualification) {
-    // Present (no endDate) counts as the latest possible date
-    const endA = a.endDate || "9999-12";
-    const endB = b.endDate || "9999-12";
-    if (endA !== endB) return endB.localeCompare(endA); // latest end date first
-    // Tiebreaker when end dates match: latest start date first
-    return b.startDate.localeCompare(a.startDate);
-  }
 
   const sortedItems = [...items].sort((a, b) => {
     // Education -> Experience -> Certification
@@ -158,7 +157,7 @@ export default function QualificationsManager() {
                     </p>
 
                     <p className="text-sm text-cream/50 mt-1">
-                      {item.startDate} — {item.endDate || "Present"}
+                      {formatYearMonth(item.startDate)} – {formatYearMonth(item.endDate)}
                     </p>
 
                     {item.description && (
@@ -264,10 +263,11 @@ export default function QualificationsManager() {
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div>
             <label className="block text-xs text-cream/60 mb-1">
-              Start (YYYY-MM)
+              Start month
             </label>
 
             <input
+              type="month"
               required
               value={form.startDate}
               onChange={(e) =>
@@ -280,10 +280,11 @@ export default function QualificationsManager() {
 
           <div>
             <label className="block text-xs text-cream/60 mb-1">
-              End (blank = Present)
+              End month (blank = Present)
             </label>
 
             <input
+              type="month"
               value={form.endDate}
               onChange={(e) =>
                 setForm({ ...form, endDate: e.target.value })
