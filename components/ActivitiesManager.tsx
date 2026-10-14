@@ -11,9 +11,19 @@ const emptyForm: Omit<Activity, "id" | "order"> = {
   link: "",
 };
 
+// Gallery URLs are edited as plain text (one per line) and only parsed on save,
+// so pressing Enter in the textarea isn't swallowed while typing.
+function parseImageList(text: string): string[] {
+  return text
+    .split(/\r?\n/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 export default function ActivitiesManager() {
   const [items, setItems] = useState<Activity[]>([]);
   const [form, setForm] = useState(emptyForm);
+  const [imagesText, setImagesText] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,11 +48,13 @@ export default function ActivitiesManager() {
       imageUrl: item.imageUrl || "",
       link: item.link || "",
     });
+    setImagesText((item.images ?? []).join("\n"));
   }
 
   function resetForm() {
     setEditingId(null);
     setForm(emptyForm);
+    setImagesText("");
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -53,7 +65,7 @@ export default function ActivitiesManager() {
     const res = await fetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ ...form, images: parseImageList(imagesText) }),
     });
     if (!res.ok) {
       const body = await res.json();
@@ -70,6 +82,8 @@ export default function ActivitiesManager() {
     if (editingId === id) resetForm();
     load();
   }
+
+  const galleryPreview = parseImageList(imagesText);
 
   return (
     <div className="grid lg:grid-cols-[1fr_380px] gap-8">
@@ -88,6 +102,11 @@ export default function ActivitiesManager() {
                 <div>
                   <p className="eyebrow text-aperture">{item.category}</p>
                   <p className="font-medium text-cream">{item.title}</p>
+                  {item.images && item.images.length > 0 && (
+                    <p className="font-mono text-xs text-cream/50 mt-1">
+                      {item.images.length} gallery photo{item.images.length === 1 ? "" : "s"}
+                    </p>
+                  )}
                   {item.link && <p className="text-cream/50 text-xs mt-1 truncate max-w-xs">{item.link}</p>}
                 </div>
                 <div className="flex flex-col gap-2 shrink-0">
@@ -135,13 +154,32 @@ export default function ActivitiesManager() {
           className="w-full bg-ink border border-line text-cream px-3 py-2 mb-3 outline-none focus:border-safelight"
         />
 
-        <label className="block text-xs text-cream/60 mb-1">Image URL (optional)</label>
+        <label className="block text-xs text-cream/60 mb-1">Cover image URL (optional)</label>
         <input
           value={form.imageUrl}
           onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
           placeholder="https://…"
           className="w-full bg-ink border border-line text-cream px-3 py-2 mb-3 outline-none focus:border-safelight"
         />
+
+        <label className="block text-xs text-cream/60 mb-1">Gallery photos (optional, one URL per line)</label>
+        <textarea
+          value={imagesText}
+          onChange={(e) => setImagesText(e.target.value)}
+          rows={4}
+          placeholder={"https://…/photo-1.jpg\nhttps://…/photo-2.jpg"}
+          className="w-full bg-ink border border-line text-cream px-3 py-2 mb-2 outline-none focus:border-safelight font-mono text-xs"
+        />
+        {galleryPreview.length > 0 && (
+          <ul className="flex flex-wrap gap-2 mb-3">
+            {galleryPreview.map((src, i) => (
+              <li key={`${src}-${i}`} className="w-12 h-12 border border-line bg-ink overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={src} alt="" className="w-full h-full object-cover" />
+              </li>
+            ))}
+          </ul>
+        )}
 
         <label className="block text-xs text-cream/60 mb-1">Link (optional)</label>
         <input
