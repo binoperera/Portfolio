@@ -22,6 +22,8 @@
   --c-safelight: 236 82 68; /* red accent */
   --c-aperture: 96 176 126; /* green accent */
   --c-film: 15 14 12;       /* film-strip base, stays dark in both themes */
+  --vignette: 0.45;         /* edge darkening strength (body background) */
+  --grain: 0.07;            /* film-grain overlay strength */
 }
 
 :root[data-theme="light"] {
@@ -33,6 +35,8 @@
   --c-safelight: 196 44 34;
   --c-aperture: 42 118 74;
   --c-film: 28 26 22;
+  --vignette: 0.08;
+  --grain: 0.05;
 }
 
 @media (prefers-color-scheme: light) {
@@ -45,6 +49,8 @@
     --c-safelight: 196 44 34;
     --c-aperture: 42 118 74;
     --c-film: 28 26 22;
+    --vignette: 0.08;
+    --grain: 0.05;
   }
 }
 
@@ -56,13 +62,17 @@
     @apply outline outline-2 outline-offset-2 outline-safelight;
   }
 
-  /* Subtle depth layer behind everything — soft safelight glow top-left,
-   cool counter-glow top-right, so the background reads as considered
-   rather than flat. Doesn't fight the film-grain overlay below. */
+  /* Depth layer behind everything, fixed to the viewport so it shows on every
+     section, not just the top:
+     - edge vignette: darkens the far left/right, so wide-screen margins read as
+       an intentional frame instead of empty flat space
+     - safelight glow top-left + cool counter-glow right side
+     - faint top sheen */
   body {
     background-image:
-      radial-gradient(circle at 12% -5%, rgb(var(--c-safelight) / 0.07), transparent 42%),
-      radial-gradient(circle at 88% 10%, rgba(120, 140, 160, 0.05), transparent 48%),
+      radial-gradient(ellipse 75% 90% at 50% 45%, transparent 55%, rgb(0 0 0 / var(--vignette)) 100%),
+      radial-gradient(circle at 10% 0%, rgb(var(--c-safelight) / 0.12), transparent 45%),
+      radial-gradient(circle at 92% 35%, rgba(120, 140, 160, 0.07), transparent 45%),
       linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 20%);
     background-attachment: fixed;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -93,6 +103,12 @@
   html {
     scrollbar-color: rgb(var(--c-line)) rgb(var(--c-ink));
   }
+}
+
+/* Hero "darkroom" glow — a soft red safelight bloom behind your name that
+   scrolls away with the hero (unlike the fixed body layer above). */
+#top {
+  background-image: radial-gradient(ellipse 55% 70% at 22% 45%, rgb(var(--c-safelight) / 0.10), transparent 70%);
 }
 
 /* Film sprocket strip — the signature structural motif, used at the top of
@@ -140,6 +156,7 @@
 
 /* Film-grain overlay — a faint, fixed noise texture over the whole site.
    Subtle on purpose: it should read as "printed on film stock", not as static.
+   Strength is set per theme with --grain (top of file).
    Pure CSS/SVG, no image file needed. Delete this whole block to remove it. */
 body {
   position: relative;
@@ -150,7 +167,7 @@ body::after {
   inset: 0;
   z-index: 9999;
   pointer-events: none;
-  opacity: 0.035;
+  opacity: var(--grain);
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
@@ -217,6 +234,9 @@ a, button {
   body {
     background: #fff !important;
     color: #111 !important;
+  }
+  #top {
+    background: none !important;
   }
   .sprocket-strip,
   .sprocket-strip-vertical {
