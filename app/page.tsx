@@ -173,7 +173,7 @@ export default async function HomePage() {
                   <a
                     href={resume.url}
                     download={resume.fileName}
-                    className="inline-flex items-center gap-2 bg-safelight text-white px-5 py-3 font-medium hover:brightness-110 transition btn-glow"
+                    className="inline-flex items-center gap-2 bg-safelight text-on-safelight px-5 py-3 font-medium hover:brightness-110 transition btn-glow"
                   >
                     Resume
                     <span aria-hidden>↓</span>
