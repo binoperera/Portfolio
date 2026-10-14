@@ -2,11 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// Wraps content so it "develops" into view on scroll — starts blurred and
-// slightly dark, like a print emerging in a chemical bath, then clears.
-// Re-triggers both ways: scrolling past a section again replays the effect,
-// so the page keeps a sense of movement instead of revealing once and going static.
-// Respects prefers-reduced-motion via the global CSS override in globals.css.
+// Wraps content so it fades up into view the first time it scrolls in,
+// then stays put. Respects prefers-reduced-motion via the global CSS
+// override in globals.css.
 export default function Reveal({
   children,
   delay = 0,
@@ -37,13 +35,15 @@ export default function Reveal({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setVisible(entry.isIntersecting);
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect(); // reveal once; don't replay on scroll back
+        }
       },
       {
-        // threshold 0 + a positive bottom margin: content starts developing
-        // just BEFORE it scrolls into view, and only hides once it's fully
-        // off-screen. So visitors never see a blank gap where a section
-        // should be — even on fast scrolls or tall sections.
+        // threshold 0 + a positive bottom margin: content starts fading in
+        // just BEFORE it scrolls into view, so visitors never see a blank gap
+        // where a section should be — even on fast scrolls or tall sections.
         threshold: 0,
         rootMargin: "0px 0px 15% 0px",
       }
