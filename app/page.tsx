@@ -288,7 +288,7 @@ export default async function HomePage() {
         )}
 
         {/* ---------------- BEYOND CODE (was the cream "contact sheet") ---------------- */}
-        <Section id="exposures" title={<>Beyond code — photography, design &amp; community</>}>
+        <Section id="exposures" title={<>Beyond code</>}>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {sortedActivities.map((a, i) => (
               <Reveal key={a.id} delay={i * 80}>
