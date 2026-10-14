@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { Metadata } from "next";
 import { getData } from "@/lib/store";
 import type { Qualification } from "@/lib/types";
 import FilmFrame from "@/components/FilmFrame";
@@ -12,6 +13,9 @@ import { isVisualCategory } from "@/lib/activityCategories";
 // Always read fresh data — without this, Next.js may statically cache this
 // page at build time and your admin edits wouldn't show up once deployed.
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 // Page width. Wider than before (was max-w-5xl / 1024px) so large screens
 // don't leave big empty gutters. Nav.tsx and Skills.tsx must use the same value.
