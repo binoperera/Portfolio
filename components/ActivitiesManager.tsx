@@ -151,8 +151,8 @@ export default function ActivitiesManager() {
     e.preventDefault();
     setError(null);
     const visual = isVisualCategory(form.category);
-    if (visual && !form.imageUrl) {
-      setError("Upload a cover image — it's required for Photography and Graphic Design.");
+    if (!form.imageUrl) {
+      setError("Upload a cover image — every activity needs one.");
       return;
     }
     const url = editingId ? `/api/activities/${editingId}` : "/api/activities";
@@ -160,10 +160,8 @@ export default function ActivitiesManager() {
     const res = await fetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
-      // Non-visual categories (e.g. Volunteering) never keep images.
-      body: JSON.stringify(
-        visual ? { ...form, images } : { ...form, imageUrl: "", images: [] }
-      ),
+      // Every activity keeps its cover; only Photography / Graphic Design keep gallery photos.
+      body: JSON.stringify({ ...form, images: visual ? images : [] }),
     });
     if (!res.ok) {
       const body = await res.json();
@@ -253,64 +251,67 @@ export default function ActivitiesManager() {
           className="w-full bg-ink border border-line text-cream px-3 py-2 mb-3 outline-none focus:border-safelight"
         />
 
-        {/* Images only for Photography / Graphic Design — upload only, no URLs. */}
-        {visual && (
-          <div className="border border-line p-3 mb-3">
-            <label className="block text-xs text-cream/60 mb-1">
-              Cover image <span className="text-safelight">*</span>
-            </label>
-            <div className="flex items-center gap-3 mb-3">
-              {form.imageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={form.imageUrl} alt="Cover preview" className="w-14 h-10 object-cover border border-line" />
-              ) : (
-                <div className="w-14 h-10 border border-dashed border-line" />
-              )}
-              <input
-                ref={coverInputRef}
-                type="file"
-                accept="image/png, image/jpeg, image/webp, image/gif"
-                onChange={handleCoverUpload}
-                disabled={uploading}
-                aria-label="Upload cover image"
-                className={`${FILE_INPUT} min-w-0`}
-              />
-            </div>
-
-            <label className="block text-xs text-cream/60 mb-1">Gallery photos (optional)</label>
-            <input
-              ref={galleryInputRef}
-              type="file"
-              multiple
-              accept="image/png, image/jpeg, image/webp, image/gif"
-              onChange={handleGalleryUpload}
-              disabled={uploading}
-              aria-label="Upload gallery photos"
-              className={`${FILE_INPUT} mb-2`}
-            />
-            {images.length > 0 && (
-              <ul className="flex flex-wrap gap-2 mb-2">
-                {images.map((src, i) => (
-                  <li key={`${src}-${i}`} className="relative w-12 h-12 border border-line bg-ink overflow-hidden">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={src} alt="" className="w-full h-full object-cover" />
-                    <button
-                      type="button"
-                      onClick={() => removeGalleryImage(i)}
-                      aria-label={`Remove photo ${i + 1}`}
-                      className="absolute top-0 right-0 w-4 h-4 bg-ink/80 text-cream text-[10px] leading-none hover:bg-safelight"
-                    >
-                      ×
-                    </button>
-                  </li>
-                ))}
-              </ul>
+        {/* Images are upload only, no URLs. Cover: every activity.
+            Gallery: Photography / Graphic Design only. */}
+        <div className="border border-line p-3 mb-3">
+          <label className="block text-xs text-cream/60 mb-1">
+            Cover image <span className="text-safelight">*</span>
+          </label>
+          <div className={`flex items-center gap-3 ${visual ? "mb-3" : "mb-2"}`}>
+            {form.imageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={form.imageUrl} alt="Cover preview" className="w-14 h-10 object-cover border border-line" />
+            ) : (
+              <div className="w-14 h-10 border border-dashed border-line" />
             )}
-            <p className="text-xs text-cream/40">
-              JPG, PNG, WEBP or GIF. Large photos are resized to 2000px before upload.
-            </p>
+            <input
+              ref={coverInputRef}
+              type="file"
+              accept="image/png, image/jpeg, image/webp, image/gif"
+              onChange={handleCoverUpload}
+              disabled={uploading}
+              aria-label="Upload cover image"
+              className={`${FILE_INPUT} min-w-0`}
+            />
           </div>
-        )}
+
+          {visual && (
+            <>
+              <label className="block text-xs text-cream/60 mb-1">Gallery photos (optional)</label>
+              <input
+                ref={galleryInputRef}
+                type="file"
+                multiple
+                accept="image/png, image/jpeg, image/webp, image/gif"
+                onChange={handleGalleryUpload}
+                disabled={uploading}
+                aria-label="Upload gallery photos"
+                className={`${FILE_INPUT} mb-2`}
+              />
+              {images.length > 0 && (
+                <ul className="flex flex-wrap gap-2 mb-2">
+                  {images.map((src, i) => (
+                    <li key={`${src}-${i}`} className="relative w-12 h-12 border border-line bg-ink overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={src} alt="" className="w-full h-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => removeGalleryImage(i)}
+                        aria-label={`Remove photo ${i + 1}`}
+                        className="absolute top-0 right-0 w-4 h-4 bg-ink/80 text-cream text-[10px] leading-none hover:bg-safelight"
+                      >
+                        ×
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          )}
+          <p className="text-xs text-cream/40">
+            JPG, PNG, WEBP or GIF. Large photos are resized to 2000px before upload.
+          </p>
+        </div>
 
         <label className="block text-xs text-cream/60 mb-1">Link (optional)</label>
         <input
