@@ -68,10 +68,21 @@ export async function verifySessionToken(token: string | undefined): Promise<boo
   }
 }
 
-export function checkPassword(input: string): boolean {
+// Compares SHA-256 hashes byte by byte without stopping early, so response
+// time doesn't reveal how much of a guess was right.
+export async function checkPassword(input: string): Promise<boolean> {
   const adminPassword = process.env.ADMIN_PASSWORD;
   if (!adminPassword) {
     throw new Error("ADMIN_PASSWORD is not set. Add it to your .env.local.");
   }
-  return input === adminPassword;
+  const enc = new TextEncoder();
+  const [a, b] = await Promise.all([
+    crypto.subtle.digest("SHA-256", enc.encode(input)),
+    crypto.subtle.digest("SHA-256", enc.encode(adminPassword)),
+  ]);
+  const x = new Uint8Array(a);
+  const y = new Uint8Array(b);
+  let diff = 0;
+  for (let i = 0; i < x.length; i++) diff |= x[i] ^ y[i];
+  return diff === 0;
 }
