@@ -15,7 +15,8 @@ export interface Activity {
   category: string;     // e.g. "Photography", "Graphic Design", "Volunteering"
   title: string;
   description?: string;
-  imageUrl?: string;
+  imageUrl?: string;    // cover image shown at the top of the card
+  images?: string[];    // gallery photos shown in the "Beyond code" contact sheet
   link?: string;
   order: number;
 }
