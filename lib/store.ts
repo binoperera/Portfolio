@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { PortfolioData } from "./types";
+import { revalidatePath } from "next/cache";
 import { defaultData } from "./defaultData";
 
 const KV_KEY = "portfolio:data";
@@ -62,6 +63,7 @@ export async function saveData(data: PortfolioData): Promise<void> {
   } else {
     writeLocal(data);
   }
+  revalidatePath("/");   // ← add this
 }
 
 export async function updateData(
