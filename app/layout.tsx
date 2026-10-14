@@ -57,7 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${display.variable} ${body.variable} ${mono.variable} font-body bg-ink text-cream`}>
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-safelight focus:text-white focus:px-4 focus:py-2 focus:font-medium"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-safelight focus:text-on-safelight focus:px-4 focus:py-2 focus:font-medium"
         >
           Skip to content
         </a>
