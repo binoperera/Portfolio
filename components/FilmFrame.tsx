@@ -3,17 +3,26 @@
 // that fits the theme instead of a generic broken-image icon.
 export default function FilmFrame({ photoUrl, name }: { photoUrl?: string; name: string }) {
   return (
-    <div className="w-full max-w-[240px] mx-auto md:mx-0">
-      <div className="flex border border-line bg-surface">
+    // Width now comes from the hero grid column in app/page.tsx (was capped at 240px).
+    <div className="w-full max-w-[300px] md:max-w-none mx-auto md:mx-0">
+      <div className="group flex border border-line bg-surface">
         <div className="sprocket-strip-vertical" />
         <div className="flex-1 aspect-[3/4] overflow-hidden relative">
           {photoUrl ? (
-            <img
-              src={photoUrl}
-              alt={name}
-              className="w-full h-full object-cover"
-              style={{ filter: "grayscale(10%) contrast(1.05)" }}
-            />
+            <>
+              {/* Muted, warm grade so a bright photo sits in the dark film palette;
+                  hovering "develops" it back to full colour. */}
+              <img
+                src={photoUrl}
+                alt={name}
+                className="w-full h-full object-cover grayscale-[40%] sepia-[.2] brightness-[.85] contrast-[1.05] transition duration-700 group-hover:grayscale-0 group-hover:sepia-0 group-hover:brightness-100"
+              />
+              {/* Soft vignette that blends the photo edges into the frame. */}
+              <div
+                aria-hidden
+                className="absolute inset-0 pointer-events-none shadow-[inset_0_0_60px_rgb(var(--c-ink)/0.7)] transition-opacity duration-700 group-hover:opacity-40"
+              />
+            </>
           ) : (
             <div
               className="w-full h-full flex flex-col items-center justify-center gap-2 text-center px-4"
