@@ -41,7 +41,7 @@ function byRecency(a: Qualification, b: Qualification) {
 }
 
 // Real <h2> for accessibility/SEO, styled exactly like the old eyebrow label.
-function SectionHeading({ children, className = "text-cream/50 mb-10" }: { children: ReactNode; className?: string }) {
+function SectionHeading({ children, className = "text-cream/65 mb-10" }: { children: ReactNode; className?: string }) {
   return <h2 className={`eyebrow ${className}`}>{children}</h2>;
 }
 
@@ -52,7 +52,7 @@ function Section({ id, title, children }: { id?: string; title: ReactNode; child
     <section id={id} className={SECTION}>
       <div className="grid lg:grid-cols-[160px_minmax(0,1fr)] gap-x-12 gap-y-8">
         <div>
-          <SectionHeading className="text-cream/50 lg:sticky lg:top-24">{title}</SectionHeading>
+          <SectionHeading className="text-cream/65 lg:sticky lg:top-24">{title}</SectionHeading>
         </div>
         <div className="min-w-0">{children}</div>
       </div>
@@ -101,7 +101,7 @@ function QualificationList({ items, variant = "grid" }: { items: Qualification[]
                   {q.organization}
                   {q.location ? ` · ${q.location}` : ""}
                 </p>
-                <p className="font-mono text-xs text-cream/40 mt-2">
+                <p className="font-mono text-xs text-cream/65 mt-2">
                   {formatDate(q.startDate)} — {formatDate(q.endDate)}
                 </p>
               </div>
@@ -352,7 +352,7 @@ export default async function HomePage() {
                     <p className="text-cream/70 text-sm mt-2 leading-relaxed flex-1">{a.description}</p>
                   )}
                   {a.link && (
-                    <span className="font-mono text-xs mt-4 text-cream/50 group-hover:text-safelight transition">
+                    <span className="font-mono text-xs mt-4 text-cream/65 group-hover:text-safelight transition">
                       view →
                     </span>
                   )}
@@ -367,7 +367,7 @@ export default async function HomePage() {
       <footer id="contact" className="border-t border-line scroll-mt-20">
         <Sprocket holeColor="rgb(var(--c-ink))" />
         <div className={`${CONTAINER} py-16`}>
-          <p className="eyebrow text-cream/50 mb-4">Contact</p>
+          <p className="eyebrow text-cream/65 mb-4">Contact</p>
           <Reveal>
             <h2 className="font-display font-bold text-3xl md:text-4xl text-cream mb-6">
               Open to Software Engineering &amp; QA roles — let&apos;s talk.
@@ -398,7 +398,7 @@ export default async function HomePage() {
               </a>
             )}
           </div>
-          <p className="font-mono text-xs text-cream/30 mt-12">
+          <p className="font-mono text-xs text-cream/65 mt-12">
             © {new Date().getFullYear()} {profile.name}. Built with Next.js.
           </p>
         </div>
