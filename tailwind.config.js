@@ -13,6 +13,7 @@ module.exports = {
         line:      "rgb(var(--c-line) / <alpha-value>)",
         cream:     "rgb(var(--c-cream) / <alpha-value>)",
         safelight: "rgb(var(--c-safelight) / <alpha-value>)",
+        "on-safelight": "rgb(var(--c-on-safelight) / <alpha-value>)",
         aperture:  "rgb(var(--c-aperture) / <alpha-value>)",
         "line-paper": "#D8D0BE",
       },
