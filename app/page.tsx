@@ -12,7 +12,7 @@ import { isVisualCategory } from "@/lib/activityCategories";
 
 // Always read fresh data — without this, Next.js may statically cache this
 // page at build time and your admin edits wouldn't show up once deployed.
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
