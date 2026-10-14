@@ -19,7 +19,8 @@
   --c-surface: 44 41 36;    /* cards */
   --c-line: 72 67 58;       /* borders, dividers */
   --c-cream: 237 232 220;   /* main text */
-  --c-safelight: 236 82 68; /* red accent */
+   --c-safelight: 240 100 86; /* red accent */
+  --c-on-safelight: 15 14 12; /* text on red buttons */ /* red accent */
   --c-aperture: 96 176 126; /* green accent */
   --c-film: 15 14 12;       /* film-strip base, stays dark in both themes */
   --vignette: 0.45;         /* edge darkening strength (body background) */
@@ -33,6 +34,7 @@
   --c-line: 216 208 192;
   --c-cream: 28 26 22;
   --c-safelight: 196 44 34;
+  --c-on-safelight: 255 255 255;
   --c-aperture: 42 118 74;
   --c-film: 28 26 22;
   --vignette: 0.08;
@@ -47,6 +49,7 @@
     --c-line: 216 208 192;
     --c-cream: 28 26 22;
     --c-safelight: 196 44 34;
+    --c-on-safelight: 255 255 255;
     --c-aperture: 42 118 74;
     --c-film: 28 26 22;
     --vignette: 0.08;
