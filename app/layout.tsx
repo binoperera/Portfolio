@@ -26,16 +26,10 @@ const DESCRIPTION =
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-   verification: {google-site-verification: googleda43971413b187f4.html},
+  verification: { google: "VeO3bVClQu-bKytJND-IOP4S6efC6727QTxpvQ7Gtag" },
   title: TITLE,
   description: DESCRIPTION,
-  openGraph: {
-    type: "website",
-    url: SITE_URL,
-    siteName: "Nimsara Perera",
-    title: TITLE,
-    description: DESCRIPTION,
-  },
+  // …rest unchanged
   twitter: {
     card: "summary_large_image",
     title: TITLE,
