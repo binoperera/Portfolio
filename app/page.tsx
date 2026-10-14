@@ -4,6 +4,7 @@ import { getData } from "@/lib/store";
 import type { Qualification } from "@/lib/types";
 import FilmFrame from "@/components/FilmFrame";
 import SmartImage from "@/components/SmartImage";
+import { byRecency, formatYearMonth } from "@/lib/dates";
 import Reveal from "@/components/Reveal";
 import ProjectDetails from "@/components/ProjectDetails";
 import Skills from "@/components/Skills";
@@ -26,22 +27,6 @@ const SECTION = `${CONTAINER} py-16 border-t border-line scroll-mt-20`;
 
 function Sprocket({ holeColor }: { holeColor: string }) {
   return <div className="sprocket-strip" style={{ ["--hole-color" as any]: holeColor }} />;
-}
-
-function formatDate(d?: string) {
-  if (!d) return "Present";
-  const [year, month] = d.split("-");
-  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  return `${months[Number(month) - 1] ?? ""} ${year}`;
-}
-
-// Newest first. "Present" (no endDate) counts as the latest possible date;
-// ties fall back to the latest start date.
-function byRecency(a: Qualification, b: Qualification) {
-  const endA = a.endDate || "9999-12";
-  const endB = b.endDate || "9999-12";
-  if (endA !== endB) return endB.localeCompare(endA);
-  return b.startDate.localeCompare(a.startDate);
 }
 
 // Real <h2> for accessibility/SEO, styled exactly like the old eyebrow label.
@@ -106,7 +91,7 @@ function QualificationList({ items, variant = "grid" }: { items: Qualification[]
                   {q.location ? ` · ${q.location}` : ""}
                 </p>
                 <p className="font-mono text-xs text-cream/65 mt-2">
-                  {formatDate(q.startDate)} — {formatDate(q.endDate)}
+                  {formatYearMonth(q.startDate)} – {formatYearMonth(q.endDate)}
                 </p>
               </div>
               {q.description && (
