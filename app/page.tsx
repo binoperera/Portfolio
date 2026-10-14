@@ -136,7 +136,7 @@ export default async function HomePage() {
         {/* ---------------- HERO ---------------- */}
         <section id="top" className="relative overflow-hidden">
           <Sprocket holeColor="rgb(var(--c-ink))" />
-          <div className={`${CONTAINER} pt-16 pb-20 md:pt-24 md:pb-28 grid md:grid-cols-[1fr_240px] gap-10 md:gap-14 items-start`}>
+          <div className={`${CONTAINER} pt-16 pb-20 md:pt-24 md:pb-28 grid md:grid-cols-[1fr_280px] lg:grid-cols-[1fr_360px] gap-10 md:gap-14 items-center`}>
             <div>
               <p className="eyebrow text-safelight mb-6">
                 Software Engineering Graduate · QA Engineer
