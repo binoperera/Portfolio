@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { getData } from "@/lib/store";
 import type { Qualification } from "@/lib/types";
 import FilmFrame from "@/components/FilmFrame";
+import SmartImage from "@/components/SmartImage";
 import Reveal from "@/components/Reveal";
 import ProjectDetails from "@/components/ProjectDetails";
 import Skills from "@/components/Skills";
@@ -211,12 +212,11 @@ export default async function HomePage() {
                 <Reveal delay={i * 100}>
                   <div className="border border-line p-6 flex flex-col bg-surface h-full">
                     {p.imageUrl && (
-                      <div className="-mx-6 -mt-6 mb-5 aspect-video overflow-hidden border-b border-line bg-ink">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
+                      <div className="relative -mx-6 -mt-6 mb-5 aspect-video overflow-hidden border-b border-line bg-ink">
+                        <SmartImage
                           src={p.imageUrl}
                           alt={`${p.title} screenshot`}
-                          loading="lazy"
+                          sizes={p.featured ? "(min-width: 768px) 1100px, 100vw" : "(min-width: 768px) 550px, 100vw"}
                           className="w-full h-full object-cover object-top"
                         />
                       </div>
@@ -310,13 +310,12 @@ export default async function HomePage() {
                       href={img.src}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group block aspect-[4/5] overflow-hidden border border-line bg-surface"
+                      className="group relative block aspect-[4/5] overflow-hidden border border-line bg-surface"
                     >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                      <SmartImage
                         src={img.src}
                         alt={img.alt}
-                        loading="lazy"
+                        sizes="(min-width: 1280px) 300px, (min-width: 768px) 33vw, 50vw"
                         className="w-full h-full object-cover grayscale-[40%] sepia-[.2] brightness-[.85] transition duration-700 group-hover:grayscale-0 group-hover:sepia-0 group-hover:brightness-100 group-hover:scale-[1.03]"
                       />
                     </a>
@@ -338,12 +337,11 @@ export default async function HomePage() {
                   }`}
                 >
                   {a.imageUrl && (
-                    <div className="-mx-5 -mt-5 mb-4 aspect-video overflow-hidden border-b border-line bg-ink">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                    <div className="relative -mx-5 -mt-5 mb-4 aspect-video overflow-hidden border-b border-line bg-ink">
+                      <SmartImage
                         src={a.imageUrl}
                         alt={`${a.title} cover`}
-                        loading="lazy"
+                        sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
                         className="w-full h-full object-cover"
                       />
                     </div>
