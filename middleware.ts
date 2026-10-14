@@ -9,6 +9,8 @@ const PROTECTED_API_PREFIXES = [
   "/api/projects",
   "/api/resume",
   "/api/profile",
+  "/api/skills",
+  "/api/upload",
 ];
 // Reads (GET) on the API routes above are public — the portfolio page needs them.
 // Only non-GET methods (POST/PUT/DELETE) are gated.
@@ -34,5 +36,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/dashboard/:path*", "/api/qualifications/:path*", "/api/activities/:path*", "/api/projects/:path*", "/api/resume/:path*", "/api/profile/:path*"],
+  matcher: ["/admin/dashboard/:path*", "/api/qualifications/:path*", "/api/activities/:path*", "/api/projects/:path*", "/api/resume/:path*", "/api/profile/:path*", "/api/skills/:path*", "/api/upload/:path*"],
 };
