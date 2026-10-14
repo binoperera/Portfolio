@@ -326,39 +326,43 @@ export default async function HomePage() {
           )}
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sortedActivities.map((a, i) => (
-              <Reveal key={a.id} delay={i * 80}>
-                <a
-                  href={a.link || undefined}
-                  target={a.link ? "_blank" : undefined}
-                  rel={a.link ? "noopener noreferrer" : undefined}
-                  className={`group border border-line bg-surface p-5 flex flex-col h-full ${
-                    a.link ? "hover:border-cream/40 transition cursor-pointer" : ""
-                  }`}
-                >
-                  {a.imageUrl && (
-                    <div className="relative -mx-5 -mt-5 mb-4 aspect-video overflow-hidden border-b border-line bg-ink">
-                      <SmartImage
-                        src={a.imageUrl}
-                        alt={`${a.title} cover`}
-                        sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-                  <p className="eyebrow text-safelight mb-3">{a.category}</p>
-                  <h3 className="font-display font-medium text-xl text-cream">{a.title}</h3>
-                  {a.description && (
-                    <p className="text-cream/70 text-sm mt-2 leading-relaxed flex-1">{a.description}</p>
-                  )}
-                  {a.link && (
-                    <span className="font-mono text-xs mt-4 text-cream/65 group-hover:text-safelight transition">
-                      view →
-                    </span>
-                  )}
-                </a>
-              </Reveal>
-            ))}
+            {sortedActivities.map((a, i) => {
+              // Cards without a link are plain cards, not <a> tags that go nowhere.
+              const Card = a.link ? "a" : "div";
+              return (
+                <Reveal key={a.id} delay={i * 80}>
+                  <Card
+                    href={a.link || undefined}
+                    target={a.link ? "_blank" : undefined}
+                    rel={a.link ? "noopener noreferrer" : undefined}
+                    className={`group border border-line bg-surface p-5 flex flex-col h-full ${
+                      a.link ? "hover:border-cream/40 transition cursor-pointer" : ""
+                    }`}
+                  >
+                    {a.imageUrl && (
+                      <div className="relative -mx-5 -mt-5 mb-4 aspect-video overflow-hidden border-b border-line bg-ink">
+                        <SmartImage
+                          src={a.imageUrl}
+                          alt={`${a.title} cover`}
+                          sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <p className="eyebrow text-safelight mb-3">{a.category}</p>
+                    <h3 className="font-display font-medium text-xl text-cream">{a.title}</h3>
+                    {a.description && (
+                      <p className="text-cream/70 text-sm mt-2 leading-relaxed flex-1">{a.description}</p>
+                    )}
+                    {a.link && (
+                      <span className="font-mono text-xs mt-4 text-cream/65 group-hover:text-safelight transition">
+                        view →
+                      </span>
+                    )}
+                  </Card>
+                </Reveal>
+              );
+            })}
           </div>
         </Section>
       </main>
@@ -386,17 +390,7 @@ export default async function HomePage() {
               <a href={profile.socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-cream/80 hover:text-safelight transition link-underline">
                 LinkedIn
               </a>
-            )}
-            {profile.socials.instagram && (
-              <a href={profile.socials.instagram} target="_blank" rel="noopener noreferrer" className="text-cream/80 hover:text-safelight transition link-underline">
-                Instagram
-              </a>
-            )}
-            {profile.socials.facebook && (
-              <a href={profile.socials.facebook} target="_blank" rel="noopener noreferrer" className="text-cream/80 hover:text-safelight transition link-underline">
-                Facebook
-              </a>
-            )}
+            )}      
           </div>
           <p className="font-mono text-xs text-cream/65 mt-12">
             © {new Date().getFullYear()} {profile.name}. Built with Next.js.
