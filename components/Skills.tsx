@@ -57,7 +57,7 @@ export default function Skills({ skills }: { skills: Skill[] }) {
     <section className="max-w-7xl mx-auto px-6 lg:px-12 py-16 border-t border-line">
       <div className="grid lg:grid-cols-[160px_minmax(0,1fr)] gap-x-12 gap-y-8">
         <div>
-          <h2 className="eyebrow text-cream/50 lg:sticky lg:top-24">Skills</h2>
+          <h2 className="eyebrow text-cream/65 lg:sticky lg:top-24">Skills</h2>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 min-w-0">
