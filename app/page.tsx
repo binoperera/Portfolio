@@ -11,8 +11,12 @@ import Nav from "@/components/Nav";
 // page at build time and your admin edits wouldn't show up once deployed.
 export const dynamic = "force-dynamic";
 
+// Page width. Wider than before (was max-w-5xl / 1024px) so large screens
+// don't leave big empty gutters. Nav.tsx and Skills.tsx must use the same value.
+const CONTAINER = "max-w-7xl mx-auto px-6 lg:px-12";
+
 // Shared section spacing; scroll-mt keeps headings clear of the sticky nav.
-const SECTION = "max-w-5xl mx-auto px-6 py-16 border-t border-line scroll-mt-20";
+const SECTION = `${CONTAINER} py-16 border-t border-line scroll-mt-20`;
 
 function Sprocket({ holeColor }: { holeColor: string }) {
   return <div className="sprocket-strip" style={{ ["--hole-color" as any]: holeColor }} />;
@@ -39,40 +43,71 @@ function SectionHeading({ children, className = "text-cream/50 mb-10" }: { child
   return <h2 className={`eyebrow ${className}`}>{children}</h2>;
 }
 
-function QualificationList({ items }: { items: Qualification[] }) {
+// Two-column section: on large screens the label sits in a sticky left rail
+// and the content fills the rest of the width. On mobile it stacks as before.
+function Section({ id, title, children }: { id?: string; title: ReactNode; children: ReactNode }) {
   return (
-    <ol className="space-y-10">
+    <section id={id} className={SECTION}>
+      <div className="grid lg:grid-cols-[160px_minmax(0,1fr)] gap-x-12 gap-y-8">
+        <div>
+          <SectionHeading className="text-cream/50 lg:sticky lg:top-24">{title}</SectionHeading>
+        </div>
+        <div className="min-w-0">{children}</div>
+      </div>
+    </section>
+  );
+}
+
+function QualificationDescription({ text }: { text: string }) {
+  const parts = text.split("•").map((s) => s.trim()).filter(Boolean);
+  const [intro, ...points] = parts;
+
+  return (
+    <>
+      {intro && <p className="text-cream/80 leading-relaxed">{intro}</p>}
+      {points.length > 0 && (
+        <ul className="mt-2 space-y-1.5 list-disc list-inside marker:text-safelight">
+          {points.map((point, idx) => (
+            <li key={idx} className="text-cream/80 leading-relaxed pl-1">
+              {point}
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
+}
+
+// variant "split": title/org/date on the left, description on the right (Experience).
+// variant "grid":  two entries per row on md+ screens (Education, Certifications).
+function QualificationList({ items, variant = "grid" }: { items: Qualification[]; variant?: "split" | "grid" }) {
+  const split = variant === "split";
+
+  return (
+    <ol className={split ? "space-y-12" : "grid md:grid-cols-2 gap-x-10 gap-y-10"}>
       {items.map((q, i) => (
         <li key={q.id}>
           <Reveal delay={i * 80}>
-            <div className="border-l border-line pl-6 pb-2">
-              <h3 className="font-display font-medium text-2xl text-cream">{q.title}</h3>
-              <p className="text-cream/70 mt-1">
-                {q.organization}
-                {q.location ? ` · ${q.location}` : ""}
-              </p>
-              <p className="font-mono text-xs text-cream/40 mt-2">
-                {formatDate(q.startDate)} — {formatDate(q.endDate)}
-              </p>
-              {q.description && (() => {
-                const parts = q.description.split("•").map((s) => s.trim()).filter(Boolean);
-                const [intro, ...points] = parts;
-
-                return (
-                  <div className="mt-3 max-w-2xl">
-                    {intro && <p className="text-cream/80 leading-relaxed">{intro}</p>}
-                    {points.length > 0 && (
-                      <ul className="mt-2 space-y-1.5 list-disc list-inside marker:text-safelight">
-                        {points.map((point, idx) => (
-                          <li key={idx} className="text-cream/80 leading-relaxed pl-1">
-                            {point}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                );
-              })()}
+            <div
+              className={`border-l border-line pl-6 pb-2 ${
+                split ? "md:grid md:grid-cols-[minmax(0,280px)_minmax(0,1fr)] md:gap-10" : ""
+              }`}
+            >
+              <div>
+                <h3 className="font-display font-medium text-2xl text-cream">{q.title}</h3>
+                <p className="text-cream/70 mt-1">
+                  {q.organization}
+                  {q.location ? ` · ${q.location}` : ""}
+                </p>
+                <p className="font-mono text-xs text-cream/40 mt-2">
+                  {formatDate(q.startDate)} — {formatDate(q.endDate)}
+                </p>
+              </div>
+              {q.description && (
+                <div className={split ? "mt-3 md:mt-0 max-w-3xl" : "mt-3 max-w-2xl"}>
+                  <QualificationDescription text={q.description} />
+                </div>
+              )}
             </div>
           </Reveal>
         </li>
@@ -101,7 +136,7 @@ export default async function HomePage() {
         {/* ---------------- HERO ---------------- */}
         <section id="top" className="relative overflow-hidden">
           <Sprocket holeColor="rgb(var(--c-ink))" />
-          <div className="max-w-5xl mx-auto px-6 pt-16 pb-20 md:pt-24 md:pb-28 grid md:grid-cols-[1fr_240px] gap-10 md:gap-14 items-start">
+          <div className={`${CONTAINER} pt-16 pb-20 md:pt-24 md:pb-28 grid md:grid-cols-[1fr_240px] gap-10 md:gap-14 items-start`}>
             <div>
               <p className="eyebrow text-safelight mb-6">
                 Software Engineering Graduate · QA Engineer
@@ -152,94 +187,92 @@ export default async function HomePage() {
         </section>
 
         {/* ---------------- ABOUT ---------------- */}
-        <section id="about" className={SECTION}>
-          <div className="grid md:grid-cols-[120px_1fr] gap-6">
-            <SectionHeading className="text-cream/50">About</SectionHeading>
-            <p className="text-cream/90 text-lg leading-relaxed max-w-2xl break-words">{profile.bio}</p>
-          </div>
-        </section>
+        <Section id="about" title="About">
+          <p className="text-cream/90 text-lg leading-relaxed max-w-3xl break-words">{profile.bio}</p>
+        </Section>
 
         {/* ---------------- PROJECTS (moved up: the main thing recruiters look for) ---------------- */}
-        <section id="work" className={SECTION}>
-          <SectionHeading>Projects</SectionHeading>
+        <Section id="work" title="Projects">
+          {/* Featured projects span the full row, so 3 projects read as 1 + 2 with no orphan card. */}
           <div className="grid md:grid-cols-2 gap-6">
             {sortedProjects.map((p, i) => (
-              <Reveal key={p.id} delay={i * 100}>
-                <div className="border border-line p-6 flex flex-col bg-surface h-full">
-                  {p.imageUrl && (
-                    <div className="-mx-6 -mt-6 mb-5 aspect-video overflow-hidden border-b border-line bg-ink">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={p.imageUrl}
-                        alt={`${p.title} screenshot`}
-                        loading="lazy"
-                        className="w-full h-full object-cover object-top"
-                      />
-                    </div>
-                  )}
-                  <div className="flex items-start justify-between gap-3">
-                    <h3 className="font-display font-medium text-2xl text-cream">{p.title}</h3>
-                    {p.featured && (
-                      <span className="eyebrow text-safelight shrink-0 pt-1">Featured</span>
+              // Wrapper carries the column span; [&>*]:h-full keeps cards in a row equal height.
+              <div key={p.id} className={`[&>*]:h-full ${p.featured ? "md:col-span-2" : ""}`}>
+                <Reveal delay={i * 100}>
+                  <div className="border border-line p-6 flex flex-col bg-surface h-full">
+                    {p.imageUrl && (
+                      <div className="-mx-6 -mt-6 mb-5 aspect-video overflow-hidden border-b border-line bg-ink">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={p.imageUrl}
+                          alt={`${p.title} screenshot`}
+                          loading="lazy"
+                          className="w-full h-full object-cover object-top"
+                        />
+                      </div>
                     )}
-                  </div>
-                  <ProjectDetails
-                    summary={p.summary}
-                    description={p.description}
-                    impact={p.impact}
-                    challenges={p.challenges}
-                    learnings={p.learnings}
-                    architectureImage={p.architectureImage}
-                  />
-                  {p.techStack?.length > 0 && (
-                    <ul className="flex flex-wrap gap-2 mt-4">
-                      {p.techStack.map((t) => (
-                        <li key={t} className="font-mono text-xs text-aperture border border-aperture/30 px-2 py-1">
-                          {t}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  <div className="flex gap-5 mt-5 pt-4 border-t border-line">
-                    <a
-                      href={p.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-mono text-sm text-cream/80 hover:text-safelight transition"
-                    >
-                      GitHub ↗
-                    </a>
-                    {p.liveUrl && (
+                    <div className="flex items-start justify-between gap-3">
+                      <h3 className="font-display font-medium text-2xl text-cream">{p.title}</h3>
+                      {p.featured && (
+                        <span className="eyebrow text-safelight shrink-0 pt-1">Featured</span>
+                      )}
+                    </div>
+                    <ProjectDetails
+                      summary={p.summary}
+                      description={p.description}
+                      impact={p.impact}
+                      challenges={p.challenges}
+                      learnings={p.learnings}
+                      architectureImage={p.architectureImage}
+                    />
+                    {p.techStack?.length > 0 && (
+                      <ul className="flex flex-wrap gap-2 mt-4">
+                        {p.techStack.map((t) => (
+                          <li key={t} className="font-mono text-xs text-aperture border border-aperture/30 px-2 py-1">
+                            {t}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <div className="flex gap-5 mt-5 pt-4 border-t border-line">
                       <a
-                        href={p.liveUrl}
+                        href={p.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="font-mono text-sm text-cream/80 hover:text-safelight transition"
                       >
-                        Live demo ↗
+                        GitHub ↗
                       </a>
-                    )}
+                      {p.liveUrl && (
+                        <a
+                          href={p.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-mono text-sm text-cream/80 hover:text-safelight transition"
+                        >
+                          Live demo ↗
+                        </a>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </Reveal>
+                </Reveal>
+              </div>
             ))}
           </div>
-        </section>
+        </Section>
 
         {/* ---------------- EXPERIENCE ---------------- */}
         {experience.length > 0 && (
-          <section id="experience" className={SECTION}>
-            <SectionHeading>Experience</SectionHeading>
-            <QualificationList items={experience} />
-          </section>
+          <Section id="experience" title="Experience">
+            <QualificationList items={experience} variant="split" />
+          </Section>
         )}
 
         {/* ---------------- EDUCATION ---------------- */}
         {education.length > 0 && (
-          <section id="education" className={SECTION}>
-            <SectionHeading>Education</SectionHeading>
+          <Section id="education" title="Education">
             <QualificationList items={education} />
-          </section>
+          </Section>
         )}
 
         {/* ---------------- SKILLS ---------------- */}
@@ -249,15 +282,13 @@ export default async function HomePage() {
 
         {/* ---------------- CERTIFICATIONS ---------------- */}
         {certifications.length > 0 && (
-          <section id="certifications" className={SECTION}>
-            <SectionHeading>Certifications</SectionHeading>
+          <Section id="certifications" title="Certifications">
             <QualificationList items={certifications} />
-          </section>
+          </Section>
         )}
 
         {/* ---------------- BEYOND CODE (was the cream "contact sheet") ---------------- */}
-        <section id="exposures" className={SECTION}>
-          <SectionHeading>Beyond code — photography, design &amp; community</SectionHeading>
+        <Section id="exposures" title={<>Beyond code — photography, design &amp; community</>}>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {sortedActivities.map((a, i) => (
               <Reveal key={a.id} delay={i * 80}>
@@ -283,13 +314,13 @@ export default async function HomePage() {
               </Reveal>
             ))}
           </div>
-        </section>
+        </Section>
       </main>
 
       {/* ---------------- CONTACT / FOOTER ---------------- */}
       <footer id="contact" className="border-t border-line scroll-mt-20">
         <Sprocket holeColor="rgb(var(--c-ink))" />
-        <div className="max-w-5xl mx-auto px-6 py-16">
+        <div className={`${CONTAINER} py-16`}>
           <p className="eyebrow text-cream/50 mb-4">Contact</p>
           <Reveal>
             <h2 className="font-display font-bold text-3xl md:text-4xl text-cream mb-6">
