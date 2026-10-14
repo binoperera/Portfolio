@@ -250,12 +250,13 @@ export default async function HomePage() {
                         ))}
                       </ul>
                     )}
+                    {/* Links get a 44px-tall tap area (py-3) without moving the text (-my-3). */}
                     <div className="flex gap-5 mt-5 pt-4 border-t border-line">
                       <a
                         href={p.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-mono text-sm text-cream/80 hover:text-safelight transition"
+                        className="inline-flex items-center py-3 -my-3 font-mono text-sm text-cream/80 hover:text-safelight transition"
                       >
                         GitHub ↗
                       </a>
@@ -264,7 +265,7 @@ export default async function HomePage() {
                           href={p.liveUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-mono text-sm text-cream/80 hover:text-safelight transition"
+                          className="inline-flex items-center py-3 -my-3 font-mono text-sm text-cream/80 hover:text-safelight transition"
                         >
                           Live demo ↗
                         </a>
