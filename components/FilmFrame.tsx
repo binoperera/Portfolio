@@ -1,6 +1,8 @@
 // A single "frame" cut from a strip of film — sprocket holes down both sides,
 // holding either your photo or, until you add one, an unexposed-frame placeholder
 // that fits the theme instead of a generic broken-image icon.
+import SmartImage from "@/components/SmartImage";
+
 export default function FilmFrame({ photoUrl, name }: { photoUrl?: string; name: string }) {
   return (
     // Width now comes from the hero grid column in app/page.tsx (was capped at 240px).
@@ -12,9 +14,11 @@ export default function FilmFrame({ photoUrl, name }: { photoUrl?: string; name:
             <>
               {/* Muted, warm grade so a bright photo sits in the dark film palette;
                   hovering "develops" it back to full colour. */}
-              <img
+              <SmartImage
                 src={photoUrl}
                 alt={name}
+                priority
+                sizes="(min-width: 768px) 360px, 300px"
                 className="w-full h-full object-cover grayscale-[40%] sepia-[.2] brightness-[.85] contrast-[1.05] transition duration-700 group-hover:grayscale-0 group-hover:sepia-0 group-hover:brightness-100"
               />
               {/* Soft vignette that blends the photo edges into the frame. */}
