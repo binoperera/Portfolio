@@ -26,7 +26,7 @@ export default function Nav({ name }: { name: string }) {
         <ul className="hidden lg:flex items-center gap-6 ml-auto">
           {links.map((l) => (
             <li key={l.href}>
-              <a href={l.href} className="eyebrow text-cream/60 hover:text-cream transition whitespace-nowrap">
+              <a href={l.href} className="eyebrow text-cream/65 hover:text-cream transition whitespace-nowrap">
                 {l.label}
               </a>
             </li>
